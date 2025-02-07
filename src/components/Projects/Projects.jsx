@@ -723,7 +723,7 @@ function Projects() {
         console.error("Error fetching data:", error);
         setError(error.message);
         setLoading(false);
-      });
+      });  
   }, []);
 
   const handleDemoClick = (item) => {
