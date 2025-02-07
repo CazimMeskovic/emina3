@@ -365,7 +365,7 @@ import "./UploadPage.css";
    
 const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 const REPO_OWNER = "CazimMeskovic";
-const REPO_NAME = "emina1";
+const REPO_NAME = "emina3";
 const FILE_PATH = "data.json";
 
 const updateGitHubFile = async (newEntry) => {
