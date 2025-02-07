@@ -1,0 +1,322 @@
+/* 
+
+   .project-details-section {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .project-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #6a0dad;
+  }
+  
+  .image-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .main-image {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .side-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+  }
+  
+  .side-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .project-description {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  @media (max-width: 768px) {
+    .image-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .side-images {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .side-images {
+      grid-template-columns: 1fr;
+    }
+  
+    .project-title {
+      font-size: 1.5rem;
+    }
+  
+    .project-description {
+      font-size: 1rem;
+    }
+  }
+   */
+
+
+   /* 
+   .project-details-section {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .project-title {
+    color: white;
+    margin-top: 20px;
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  .image-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .main-image {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  .side-images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .side-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  
+  @media (min-width: 1200px) {
+    .project-details-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .project-title {
+      margin-top: 20px;
+      color: white;
+    }
+  
+    .image-grid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+    }
+  
+    .main-image {
+      width: 50%;
+      max-width: 400px;
+      height: 400px;
+    }
+  
+    .side-images {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 10px;
+      width: 50%;
+      max-width: 400px;
+    }
+  
+    .side-image {
+      width: 100%;
+      height: 195px;
+      object-fit: cover;
+    }
+  
+    .project-description {
+      margin-top: 30px;
+      width: 33%;
+      color: white;
+      font-size: 1.2rem;
+      text-align: justify;
+    }
+  }
+   */
+
+   .project-details-section {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    padding-top: 4%;
+    text-align: center;
+  }
+  
+ /*  .project-title {
+    color: white;
+    margin-top: 20px;
+    font-size: 2rem;
+    
+    text-align: left;
+  } */
+  .project-title {
+    /* color: white; */
+    color: wheat;
+    margin-top: 20px;
+    font-size: 2rem;
+    text-align: left;
+    display: block; /* Osigurava da se ponaša kao blok */
+    width: 73%; /* Osigurava da zauzima celu širinu */
+}
+  
+  .image-grid {
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: center; */
+    justify-content:start;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+   
+  }
+  
+  .main-image {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  
+  .side-images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .side-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  
+  /* Overlay Styles */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* 40% opacity */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .overlay-content {
+    position: relative;
+    width: 60%;
+  }
+  
+  .overlay-image {
+    max-width:600px;
+    max-height:500px;
+    width: 100%;
+    border-radius: 5px;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    /* font-size: 50px; */
+    font-size: 3rem;
+    color: white;
+    cursor: pointer;
+  }
+  .project-description{
+    color: wheat;
+  }
+  
+  /* Stilovi za ekrane šire od 1200px */
+  @media (min-width: 1200px) {
+    .project-details-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .project-title {
+      margin-top: 20px;
+      /* color: white; */
+      color: wheat;
+    }
+  
+    .image-grid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+    }
+  
+    .main-image {
+      width: 50%;
+      max-width: 400px;
+      height: 400px;
+    }
+  
+    .side-images {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 10px;
+      width: 50%;
+      max-width: 400px;
+    }
+  
+    .side-image {
+      width: 100%;
+      height: 195px;
+      object-fit: cover;
+    }
+  
+    .project-description {
+      margin-top: 30px;
+     /*  width: 33%; */
+      width: 73%;
+      /* color: white; */
+      color: wheat;
+      font-size: 1.2rem;
+      text-align: justify;
+    }
+  }
+  
