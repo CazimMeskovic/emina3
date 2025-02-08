@@ -813,7 +813,8 @@ function Projects() {
   useEffect(() => {
     // URL ka RAW verziji fajla
     const rawGithubUrl =
-      "https://raw.githubusercontent.com/CazimMeskovic/emina3/main/src/data.json";
+    /*   "https://raw.githubusercontent.com/CazimMeskovic/emina3/main/src/data.json"; */
+      "https://raw.githubusercontent.com/CazimMeskovic/emina3/main/data.json";
 
     fetch(rawGithubUrl)
       .then((res) => {
