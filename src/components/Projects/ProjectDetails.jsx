@@ -234,6 +234,7 @@ function ProjectDetails() {
 export default ProjectDetails;
  */
 
+
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
@@ -267,10 +268,10 @@ function ProjectDetails() {
     <Container fluid className="project-details-section">
       <Particle />
       <Container>
-        <h1 className="project-heading">
+       {/*  <h1 className="project-heading">
           <strong className="purple">{item.title || "No Title"}</strong>
         </h1>
-        <p className="project-description">{item.text || "No description available."}</p>
+        <p className="project-description">{item.text || "No description available."}</p> */}
 
         <div className="image-grid">
           {item.images && item.images.length > 0 ? (
@@ -297,13 +298,16 @@ function ProjectDetails() {
                   )
                 ))}
               </div>
+              <h1 className="project-heading">
+          <strong className="polozajTitla purple ">{item.title || "No Title"}</strong>
+        </h1>
+        <p className="project-description">{item.text || "No description available."}</p>
             </>
           ) : (
             <p>No images available</p>
           )}
         </div>
 
-        {/* Overlay za prikazivanje veće slike */}
         {showOverlay && (
           <div className="overlay" onClick={closeOverlay}>
             <div className="overlay-content" onClick={(e) => e.stopPropagation()}>
@@ -322,3 +326,5 @@ function ProjectDetails() {
 }
 
 export default ProjectDetails;
+ 
+

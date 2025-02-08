@@ -8,27 +8,19 @@
     text-align: center;
   }
   
- /*  .project-title {
-    color: white;
-    margin-top: 20px;
-    font-size: 2rem;
-    
-    text-align: left;
-  } */
+
   .project-title {
-    /* color: white; */
     color: wheat;
     margin-top: 20px;
     font-size: 2rem;
     text-align: left;
-    display: block; /* Osigurava da se ponaša kao blok */
-    width: 73%; /* Osigurava da zauzima celu širinu */
+    display: block; 
+    width: 73%; 
 }
   
   .image-grid {
     display: flex;
     flex-wrap: wrap;
-    /* justify-content: center; */
     justify-content:start;
     align-items: flex-start;
     gap: 10px;
@@ -59,14 +51,13 @@
     cursor: pointer;
   }
   
-  /* Overlay Styles */
   .overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4); /* 40% opacity */
+    background-color: rgba(0, 0, 0, 0.4); 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -89,7 +80,6 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    /* font-size: 50px; */
     font-size: 3rem;
     color: white;
     cursor: pointer;
@@ -98,7 +88,6 @@
     color: wheat;
   }
   
-  /* Stilovi za ekrane šire od 1200px */
   @media (min-width: 1200px) {
     .project-details-section {
       display: flex;
@@ -108,7 +97,6 @@
   
     .project-title {
       margin-top: 20px;
-      /* color: white; */
       color: wheat;
     }
   
@@ -142,12 +130,17 @@
   
     .project-description {
       margin-top: 30px;
-     /*  width: 33%; */
       width: 73%;
-      /* color: white; */
       color: wheat;
       font-size: 1.2rem;
       text-align: justify;
     }
+    .polozajTitla{
+      margin-top: 30px;
+      width: 73%;
+     /*  color: wheat;
+      font-size: 1.2rem; */
+      text-align: justify;
+    }
   }
-  
+   

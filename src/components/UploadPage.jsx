@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./UploadPage.css";
+import { Buffer } from "buffer";
+
+
 
 const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 const REPO_OWNER = "CazimMeskovic";
@@ -38,7 +41,9 @@ const updateGitHubFile = async (newEntry) => {
 
     // 4️⃣ Konvertuj novi sadržaj u Base64
     const updatedContent = JSON.stringify(currentData, null, 2);
-    const encodedContent = btoa(updatedContent);
+    /* const encodedContent = btoa(updatedContent); */
+    const encodedContent = Buffer.from(updatedContent, 'utf-8').toString('base64');
+
 
     // 5️⃣ Ažuriraj fajl na GitHub-u
     const updateResponse = await fetch(url, {
