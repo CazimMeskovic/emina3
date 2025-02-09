@@ -9,11 +9,12 @@ import Toolstack from "./Toolstack";
 
 function About() {
   return (
-    <Container fluid className="about-section">
+    <Container fluid className="OmeniMobile about-section">
       <Particle />
       <Container>
         <Row style={{ justifyContent: "center", padding: "10px" }}>
           <Col
+          className="KoSamJa"
             md={7}
             style={{
               justifyContent: "center",
@@ -22,7 +23,7 @@ function About() {
             }}
           >
             <h1 style={{ fontSize: "2.1em", paddingBottom: "20px" }}>
-              Ko sam <strong className="purple">ja</strong>
+               <strong className="KoSamJa main-name">Ko sam ja</strong>
             </h1>
             <Aboutcard />
           </Col>

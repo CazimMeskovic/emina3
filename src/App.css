@@ -61,3 +61,40 @@
   padding: 10px; */
 }
 
+
+@media (max-width: 500px) {
+ 
+  .KoSamJa{
+padding-top: 0 !important;
+padding-bottom: 0 !important;
+/* border: 10px !important ;
+border-style: double !important;
+border: #61dafb !important; */
+  }
+  .homeFone{
+    padding-top: 0 !important;
+padding-bottom: 0px !important;
+margin-bottom: 0px !important;
+/* margin-top: -20px !important; */
+  }
+  .homeFone1{
+    margin-top: -90px !important;
+    margin-bottom: -10px !important;
+    padding-top: 0px !important;
+padding-bottom: 0px !important;
+  }
+  .OmeniMobile{
+   /*  padding-top: 40px !important; */
+    padding-top: 90px !important;
+    padding-bottom: 0px !important;
+  /*   margin-bottom: -30px !important; */
+    /*  margin-top: -20px !important;  */
+  }
+  .OmeniKontext{
+    margin-top: -30px !important;
+    padding-top: 0px !important;
+
+  }
+}
+
+
