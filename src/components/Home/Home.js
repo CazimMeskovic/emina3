@@ -23,7 +23,7 @@ function Home() {
 
               <h1 className="heading-name">
              Ovo je 
-                <strong className="main-name"> Šnajderska radnja</strong>
+                <strong className="main-name"> Krojačka web stranica</strong>
               </h1>
 
               <div style={{ padding: 50, textAlign: "left" }}>

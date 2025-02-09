@@ -1,4 +1,23 @@
-.upload-main-div{
-    background-color:rgb(58, 180, 64);
-    margin-top: 250px 
+ .upload-main-div{
+    background-color:rgb(111, 68, 124);
+    margin-top: 250px;
+   /*  padding-top:20% ; */
+    padding-bottom:20% ;
+    
+  
 }
+ 
+
+ .textItitle{
+  width: 90% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+ }
+
+ .textItitleButon{
+    width: 40% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+ }
