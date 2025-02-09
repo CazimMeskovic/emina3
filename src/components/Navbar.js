@@ -92,6 +92,13 @@ function NavBar() {
                 />{" "}
                 Objavi
               </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/kontakt"
+                onClick={() => updateExpanded(false)}
+              >
+                <AiOutlineUser style={{ marginBottom: "2px" }} /> Kontakt
+              </Nav.Link>
             
 
             {/* <Nav.Item>

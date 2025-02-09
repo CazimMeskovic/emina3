@@ -19,6 +19,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { UploadPage, DisplayPage } from "./components/UploadPage";
 import ProjectDetails from "./components/Projects/ProjectDetails";
 import PasswordPage from "./components/PasswordPage ";
+import Kontakt from "./components/Kontakt";
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
           <Route  path="/upload" element={<UploadPage />} />
           <Route path="/project-details" element={<ProjectDetails />} />
           <Route path="/password" element={<PasswordPage />} />
+          <Route path="/kontakt" element={<Kontakt />} />
         
           {/* emina dio kraj */}
 
