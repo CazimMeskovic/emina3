@@ -19,31 +19,59 @@ function Home2() {
               DOZVOLITE <span className="purple"> MI DA </span> SE PREDSTAVIM
             </h1>
             <p className="home-about-body">
-            Dobrodošli u moju krojačku radionicu,🤷‍♂️
+              Dobrodošli u moju mini kućnu krojački radionicu.
+              <b className="purple">
+                Inspirisano ljubavlju 🧵🪡💜
+
+                Kreativno, sa stilom i pečatom svoje osobnosti, Mina dizajnira za vas:
+              </b>
               <br />
-              <br />Ovdje se svaki komad tkanine pretvara u unikatno djelo! Sa strašću prema šivenju i pažnjom prema detaljima,
+              <br />
+
+              -propisne odjevne predmete za žene,
+              <br />
+              <b className="purple">
+                -unikatne komade odjece,
+              </b>
+              <br />
+
+              -jedinstvene svečane komade za posebne, zatvorene događaje,
+              <br />
+              <b className="purple">
+                -burkinije za izolovane plaže, bazene,
+              </b>
+              <br />
+
+              -intimni kutak
+              <br />
+              <br />
+              <b className="purple">
+                i još puno toga što zajedničkim idejamo mozemo pretvoriti u unikatne komade odjeće prilagođene vašim potrebama.
+              </b>
+              <br />
+              <br />
               <i>
-                <b className="purple"> izrađujem odjeću i tekstilne radove po vašoj želji. Bilo da vam je potreban popravak, prepravka ili potpuno novi komad, </b>
+                <b className="purple"> </b>
               </i>
               <br />
               <br />
-              tu sam da vaše ideje pretočim u stvarnost. Svaki šav nosi priču, a moja misija je da vam pružim kvalitet, &nbsp;
+              &nbsp;
               <i>
-                <b className="purple">udobnost i stil po mjeri. </b> {" "}
+                <b className="purple"> </b> {" "}
                 <b className="purple">
-                Kontaktirajte me i zajedno ćemo stvoriti nešto posebno!
+
                 </b>
               </i>
               <br />
               <br />
-              <b className="purple"></b> 
+              <b className="purple"></b>
               <i>
                 <b className="purple">
                   {" "}
-                 
+
                 </b>
               </i>
-              &nbsp; 
+              &nbsp;
               <i>
                 <b className="purple"> </b>
               </i>
