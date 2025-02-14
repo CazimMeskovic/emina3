@@ -39,56 +39,56 @@ const Contact = () => {
       .then(
         () => {
           setLoading(false);
-          alert("Thank you. I will get back to you as soon as possible.");
+          alert("Hvala vam. Uspješno ste poslali poruku");
           setForm({ name: "", email: "", message: "" });
         },
         (error) => {
           setLoading(false);
           console.error(error);
-          alert("Ahh, something went wrong. Please try again.");
+          alert("Ahh, nešto nije uredu s serverom !");
         }
       );
   };
 
   return (
     <div className="contact-container">
-      <h3>Contact</h3>
+      <h3>Pošalji poruku</h3>
       <form ref={formRef} onSubmit={handleSubmit} className="contact-form">
         <label>
-          Your Name
+          Vaše ime
           <input
             type="text"
             name="name"
             value={form.name}
             onChange={handleChange}
-            placeholder="Your name"
+            placeholder="Unesite vaše ime"
             required
           />
         </label>
         <label>
-          Your Email
+          Vaš email
           <input
             type="email"
             name="email"
             value={form.email}
             onChange={handleChange}
-            placeholder="Your email"
+            placeholder="Unesite vaš email"
             required
           />
         </label>
         <label>
-          Your Message
+          Vaša poruka
           <textarea
             name="message"
             value={form.message}
             onChange={handleChange}
-            placeholder="Your message"
+            placeholder="Unesite vašu poruku"
             rows="5"
             required
           />
         </label>
         <button type="submit" disabled={loading}>
-          {loading ? "Sending..." : "Send"}
+          {loading ? "Šaljem..." : "Pošalji"}
         </button>
       </form>
     </div>
