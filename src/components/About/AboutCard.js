@@ -8,19 +8,23 @@ function AboutCard() {
       <Card.Body>
         <blockquote className="blockquote mb-0">
           <p style={{ textAlign: "justify" }}>
-          Šivenjem se bavim već dugi niz godina u početku samo za sebe,iz ljubavi prema kreativnosti i ručnom radu. Vremenom je ta strast prerasla u nešto veće, pa sam počela šiti i za druge – za sve one koji žele unikatne komade, skrojene baš po njihovoj meri i želji.
-          <span className="purple"></span>
-             <span className="purple"> Bilo da vam je potreban poseban odevni komad, prepravka ili restauracija stare odeće, svaki rad pristupam s pažnjom, preciznošću i posvećenošću detaljima.</span>
+            Šivenjem se bavim već dugi niz godina u početku samo za sebe i svoje najmilije,iz ljubavi prema raskošnoj tkanini i slobodi ispoljavanja vlastite vizije i kreiranja željenih detalja.
+            <span className="purple"></span>
             <br />
-            Verujem da odeća treba da odražava ličnost i stil svakog pojedinca, zato mi je cilj da kroz svoj rad omogućim svima da dobiju upravo ono što žele – kvalitetno izrađeno, udobno i jedinstveno. 
             <br />
-            
+            <span className="purple"> Vremenom je ta strast prerasla u nešto veće, pa sam počela šiti i za druge .Verujem da odeća treba da odražava ličnost i stil svakog pojedinca, </span>
+
+            zato mi je cilj da kroz svoj rad omogućim svima da dobiju upravo ono što žele pridržavajući se jasnih granica dozvoljenog.
+
+            <br />
+
             {/* <br />
             <br /> */}
-             <span className="purple">Ako imate ideju koju želite da oživite, tu sam da je zajedno pretvorimo u stvarnost!</span>
-            
+            <br />
+            <span className="purple">Vjerujem ako težite istom cilju da cemo naći dosta zajedničkih ideja da ostvarimo i vaše vizije, radujem se suradnji .</span>
+
           </p>
-          <ul>
+          {/*   <ul>
             <li className="about-activity">
               <ImPointRight /> Izaberi
             </li>
@@ -30,10 +34,10 @@ function AboutCard() {
             <li className="about-activity">
               <ImPointRight /> Poruči
             </li>
-          </ul>
+          </ul> */}
 
           <p style={{ color: "rgb(155 126 172)" }}>
-           {" "}
+            {" "}
           </p>
           <footer className="blockquote-footer"></footer>
         </blockquote>
