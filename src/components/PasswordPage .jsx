@@ -8,7 +8,7 @@ const PasswordPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();  // Koristi useNavigate umjesto useHistory
 
-  const correctPassword = 'emina1987';
+  const correctPassword = 'eminahm83';
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);

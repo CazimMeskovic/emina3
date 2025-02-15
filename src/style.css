@@ -447,8 +447,18 @@ button:focus {
 .project-section {
   position: relative !important;
   padding-top: 150px !important;
-  padding-bottom: 30px !important;
+  padding-bottom: 30px !important; 
+
   background-image: var(--section-background-color) !important;
+
+}
+@media (max-width: 500px) {
+  .project-section {
+  
+    padding-bottom: 30% !important;
+   
+  
+  }
 }
 
 .project-card {

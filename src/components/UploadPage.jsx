@@ -321,6 +321,9 @@ const REPO_OWNER = "CazimMeskovic";
 const REPO_NAME = "emina3";
 const FILE_PATH = "data.json";
 
+
+ 
+
 const updateGitHubFile = async (newEntry) => {
   const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
 
@@ -379,6 +382,15 @@ const UploadPage = () => {
   const [images, setImages] = useState([null, null, null, null, null]);
   const [previews, setPreviews] = useState([null, null, null, null, null]);
 
+  /* za dugme da mijenja boju start */
+
+  const [isRed, setIsRed] = useState(false);
+
+  const handleClick = () => {
+    setIsRed(true);
+  };
+  /* za dugme da mijenja boju end */
+
   const handleImageChange = (e, index) => {
     const file = e.target.files[0];
     if (file) {
@@ -421,7 +433,14 @@ const UploadPage = () => {
             {previews[index] && <img src={previews[index]} alt="Preview" width="100" />}
           </div>
         ))}
-        <button type="submit" className="textItitleButon submit-button">Sačuvaj</button>
+       {/*  <button type="submit" className="textItitleButon submit-button">Objavi</button> */}
+       <button
+      type="submit"
+      className={`textItitleButon submit-button ${isRed ? "bg-red-500" : ""}`}
+      onClick={handleClick}
+    >
+      Objavi
+    </button>
       </form>
     </div>
   );

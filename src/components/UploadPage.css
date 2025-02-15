@@ -6,6 +6,16 @@
     
   
 }
+
+@media (max-width: 500px) {
+   .upload-main-div{
+     
+      padding-bottom:40% ;
+      
+    
+  }
+
+}
  
 
  .textItitle{

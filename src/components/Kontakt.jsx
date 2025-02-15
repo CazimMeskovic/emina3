@@ -29,9 +29,9 @@ const Contact = () => {
         "template_l3mmy24",
         {
           from_name: form.name,
-          to_name: "CazimMeskovic",
+          to_name: "EminaHM",
           from_email: form.email,
-          to_email: "meskovic0007@gmail.com",
+          to_email: "eminahm3@gmail.com",
           message: form.message,
         },
         "cjQxd5nH8DzJeB5xN"
