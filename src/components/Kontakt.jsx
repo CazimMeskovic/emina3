@@ -25,8 +25,8 @@ const Contact = () => {
 
     emailjs
       .send(
-        "service_x6k12af",
-        "template_l3mmy24",
+        "service_fb6cole",
+        "template_0c7uwfn",
         {
           from_name: form.name,
           to_name: "EminaHM",
@@ -34,7 +34,7 @@ const Contact = () => {
           to_email: "eminahm3@gmail.com",
           message: form.message,
         },
-        "cjQxd5nH8DzJeB5xN"
+        "7d_YURh6RshqTwNVO"
       )
       .then(
         () => {
