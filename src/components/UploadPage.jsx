@@ -1,556 +1,6 @@
-/* import React, { useState, useEffect } from "react";
-import "./UploadPage.css";
-import { Buffer } from "buffer";
-
-
-
-const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
-const REPO_OWNER = "CazimMeskovic";
-const REPO_NAME = "emina3";
-const FILE_PATH = "data.json";
-
-const updateGitHubFile = async (newEntry) => {
-  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
-
-  try {
-    // 1️⃣ Učitaj trenutne podatke iz GitHub-a
-    let currentData = [];
-    try {
-      const response = await fetch(`https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`);
-      if (response.ok) {
-        currentData = await response.json();
-      }
-    } catch (err) {
-      console.warn("Fajl ne postoji, kreiram novi.");
-    }
-
-    // 2️⃣ Dodaj novi unos
-    currentData.push(newEntry);
-
-    // 3️⃣ Dohvati SHA fajla (ako postoji)
-    let sha = null;
-    const fileDataResponse = await fetch(url, {
-      headers: { Authorization: `token ${GITHUB_TOKEN}` },
-    });
-
-    if (fileDataResponse.ok) {
-      const fileData = await fileDataResponse.json();
-      sha = fileData.sha;
-    }
-
-    // 4️⃣ Konvertuj novi sadržaj u Base64
-    const updatedContent = JSON.stringify(currentData, null, 2);
-    const encodedContent = Buffer.from(updatedContent, 'utf-8').toString('base64');
-
-
-    // 5️⃣ Ažuriraj fajl na GitHub-u
-    const updateResponse = await fetch(url, {
-      method: "PUT",
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message: "Dodavanje novog unosa u data.json",
-        content: encodedContent,
-        sha: sha || undefined,
-      }),
-    });
-
-    if (updateResponse.ok) {
-      console.log("Podaci uspešno sačuvani na GitHubu!");
-    } else {
-      console.error("Greška pri ažuriranju fajla:", await updateResponse.text());
-    }
-  } catch (error) {
-    console.error("Greška pri povezivanju sa GitHub API-jem:", error);
-  }
-};
-
-const UploadPage = () => {
-  const [text, setText] = useState("");
-  const [title, setTitle] = useState("");
-  const [images, setImages] = useState([null, null, null, null, null]);
-  const [previews, setPreviews] = useState([null, null, null, null, null]);
-
-  const handleImageChange = (e, index) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newImages = [...images];
-        newImages[index] = reader.result;
-        setImages(newImages);
-
-        const newPreviews = [...previews];
-        newPreviews[index] = URL.createObjectURL(file);
-        setPreviews(newPreviews);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const newEntry = { title, text, images: images.filter(Boolean) };
-
-    await updateGitHubFile(newEntry);
-
-    setText("");
-    setTitle("");
-    setImages([null, null, null, null, null]);
-    setPreviews([null, null, null, null, null]);
-  };
-
-  return (
-    <div className="upload-main-div">
-      <h2>Upload Teksta i Slika</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Unesi naslov" value={title} onChange={(e) => setTitle(e.target.value)} />
-        <textarea placeholder="Unesi opis" value={text} onChange={(e) => setText(e.target.value)} />
-        {[0, 1, 2, 3, 4].map((index) => (
-          <div key={index}>
-            <input type="file" accept="image/*" onChange={(e) => handleImageChange(e, index)} />
-            {previews[index] && <img src={previews[index]} alt="Preview" width="100" />}
-          </div>
-        ))}
-        <button type="submit">Sačuvaj</button>
-      </form>
-    </div>
-  );
-};
-
-const DisplayPage = () => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`
-        );
-        if (response.ok) {
-          const jsonData = await response.json();
-          setData(jsonData);
-        }
-      } catch (err) {
-        console.error("Greška pri učitavanju podataka:", err);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  return (
-    <div>
-      <h2>Prikaz Unesenih Podataka</h2>
-      {data.map((item, index) => (
-        <div key={index}>
-          <h3>{item.title}</h3>
-          <p>{item.text}</p>
-          {item.images && item.images.map((img, imgIndex) =>
-            img ? <img key={imgIndex} src={img} alt="Uploaded" width="100" /> : null
-          )}
-        </div>
-      ))}
-    </div>
-  );
-};
-
-export { UploadPage, DisplayPage };
- */
-/* 
 import React, { useState, useEffect } from "react";
 import "./UploadPage.css";
-import { Buffer } from "buffer";
-
-const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
-const REPO_OWNER = "CazimMeskovic";
-const REPO_NAME = "emina3";
-const FILE_PATH = "data.json";
-
-const updateGitHubFile = async (newEntry) => {
-  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
-
-  try {
-    let currentData = [];
-    try {
-      const response = await fetch(`https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`);
-      if (response.ok) {
-        currentData = await response.json();
-      }
-    } catch (err) {
-      console.warn("Fajl ne postoji, kreiram novi.");
-    }
-
-    currentData.push(newEntry);
-
-    let sha = null;
-    const fileDataResponse = await fetch(url, {
-      headers: { Authorization: `token ${GITHUB_TOKEN}` },
-    });
-
-    if (fileDataResponse.ok) {
-      const fileData = await fileDataResponse.json();
-      sha = fileData.sha;
-    }
-
-    const updatedContent = JSON.stringify(currentData, null, 2);
-    const encodedContent = Buffer.from(updatedContent, 'utf-8').toString('base64');
-
-    const updateResponse = await fetch(url, {
-      method: "PUT",
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message: "Dodavanje novog unosa u data.json",
-        content: encodedContent,
-        sha: sha || undefined,
-      }),
-    });
-
-    if (updateResponse.ok) {
-      alert("Slike su uspešno spremljene!");
-    } else {
-      console.error("Greška pri ažuriranju fajla:", await updateResponse.text());
-    }
-  } catch (error) {
-    console.error("Greška pri povezivanju sa GitHub API-jem:", error);
-  }
-};
-
-const UploadPage = () => {
-  const [text, setText] = useState("");
-  const [title, setTitle] = useState("");
-  const [images, setImages] = useState([null, null, null, null, null]);
-  const [previews, setPreviews] = useState([null, null, null, null, null]);
-
-  const handleImageChange = (e, index) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newImages = [...images];
-        newImages[index] = reader.result;
-        setImages(newImages);
-
-        const newPreviews = [...previews];
-        newPreviews[index] = URL.createObjectURL(file);
-        setPreviews(newPreviews);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newEntry = { title, text, images: images.filter(Boolean) };
-    await updateGitHubFile(newEntry);
-    setText("");
-    setTitle("");
-    setImages([null, null, null, null, null]);
-    setPreviews([null, null, null, null, null]);
-  };
-
-  return (
-    <div className="upload-main-div">
-      <h2>Upload Teksta i Slika</h2>
-      <form onSubmit={handleSubmit} className="upload-form">
-        <input type="text" placeholder="Unesi naslov" value={title} onChange={(e) => setTitle(e.target.value)} 
-        className="input-title" />
-        <textarea placeholder="Unesi opis" value={text} onChange={(e) => setText(e.target.value)} className="input-textarea" />
-        {[0, 1, 2, 3, 4].map((index) => (
-          <div key={index} className="image-upload">
-            <input type="file" accept="image/*" onChange={(e) => handleImageChange(e, index)} />
-            {previews[index] && <img src={previews[index]} alt="Preview" width="100" />}
-          </div>
-        ))}
-        <button type="submit" className="submit-button">Sačuvaj</button>
-      </form>
-    </div>
-  );
-};
-
-const DisplayPage = () => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`);
-        if (response.ok) {
-          const jsonData = await response.json();
-          setData(jsonData);
-        }
-      } catch (err) {
-        console.error("Greška pri učitavanju podataka:", err);
-      }
-    };
-    fetchData();
-  }, []);
-
-  return (
-    <div className="display-main-div">
-      <h2>Prikaz Unesenih Podataka</h2>
-      {data.map((item, index) => (
-        <div key={index} className="data-entry">
-          <h3>{item.title}</h3>
-          <p>{item.text}</p>
-          {item.images && item.images.map((img, imgIndex) =>
-            img ? <img key={imgIndex} src={img} alt="Uploaded" width="100" /> : null
-          )}
-        </div>
-      ))}
-    </div>
-  );
-};
-
-export { UploadPage, DisplayPage };
- */
-
-/* 
-import React, { useState, useEffect } from "react";
-import "./UploadPage.css";
-import { Buffer } from "buffer";
-
-const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
-const REPO_OWNER = "CazimMeskovic";
-const REPO_NAME = "emina3";
-const FILE_PATH = "data.json";
-
-
- 
-
-const updateGitHubFile = async (newEntry) => {
-  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`; 
-
-  try {
-    let currentData = [];
-    try {
-      const response = await fetch(`https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`);
-      if (response.ok) {
-        currentData = await response.json();
-      }
-    } catch (err) {
-      console.warn("Fajl ne postoji, kreiram novi.");
-    }
-
-    currentData.push(newEntry);
-
-    let sha = null;
-    const fileDataResponse = await fetch(url, {
-      headers: { Authorization: `token ${GITHUB_TOKEN}` },
-    });
-
-    if (fileDataResponse.ok) {
-      const fileData = await fileDataResponse.json();
-      sha = fileData.sha;
-    }
-
-    const updatedContent = JSON.stringify(currentData, null, 2);
-    const encodedContent = Buffer.from(updatedContent, 'utf-8').toString('base64');
-
-    const updateResponse = await fetch(url, {
-      method: "PUT",
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message: "Dodavanje novog unosa u data.json",
-        content: encodedContent,
-        sha: sha || undefined,
-      }),
-    });
-
-    if (updateResponse.ok) {
-      alert("Slike su uspešno spremljene!");
-    } else {
-      console.error("Greška pri ažuriranju fajla:", await updateResponse.text());
-    }
-  } catch (error) {
-    console.error("Greška pri povezivanju sa GitHub API-jem:", error);
-  }
-};
-
-const UploadPage = () => {
-  const [text, setText] = useState("");
-  const [title, setTitle] = useState("");
-  const [images, setImages] = useState([null, null, null, null, null]);
-  const [previews, setPreviews] = useState([null, null, null, null, null]);
-
- 
-
-  const [isRed, setIsRed] = useState(false);
-
-  const handleClick = () => {
-    setIsRed(true);
-  };
- 
-
-  const handleImageChange = (e, index) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newImages = [...images];
-        newImages[index] = reader.result;
-        setImages(newImages);
-
-        const newPreviews = [...previews];
-        newPreviews[index] = URL.createObjectURL(file);
-        setPreviews(newPreviews);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newEntry = { title, text, images: images.filter(Boolean) };
-    await updateGitHubFile(newEntry);
-    setText("");
-    setTitle("");
-    setImages([null, null, null, null, null]);
-    setPreviews([null, null, null, null, null]);
-  };
-
-  return (
-    <div className="upload-main-div">
-      <h2>Upload Teksta i Slika</h2>
-      
-      <form onSubmit={handleSubmit} className="textItitle upload-form">
-      <div className="textItitle" >
-        <input type="text" placeholder="Unesi naslov" value={title} onChange={(e) => setTitle(e.target.value)} className="textItitle input-title" />
-        <textarea placeholder="Unesi opis" value={text} onChange={(e) => setText(e.target.value)} className="textItitle input-textarea" />
-        </div>
-        {[0, 1, 2, 3, 4].map((index) => (
-          <div key={index} className="textItitle image-upload">
-            <input className="textItitle" type="file" accept="image/*" onChange={(e) => handleImageChange(e, index)} />
-            {previews[index] && <img src={previews[index]} alt="Preview" width="100" />}
-          </div>
-        ))}
-      <button type="submit" className="textItitleButon submit-button">Objavi</button> 
-       <button
-      type="submit"
-       className={`textItitleButon submit-button ${isRed ? "bg-red-500" : ""}`} 
-   
-      onClick={handleClick}
-    >
-      Objavi
-    </button>
-      </form>
-    </div>
-  );
-};
-
-const DisplayPage = () => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`);
-        if (response.ok) {
-          const jsonData = await response.json();
-          setData(jsonData);
-        }
-      } catch (err) {
-        console.error("Greška pri učitavanju podataka:", err);
-      }
-    };
-    fetchData();
-  }, []);
-
-  return (
-    <div className="display-main-div">
-      <h2>Prikaz Unesenih Podataka</h2>
-      {data.map((item, index) => (
-        <div key={index} className="data-entry">
-          <h3>{item.title}</h3>
-          <p>{item.text}</p>
-          {item.images && item.images.map((img, imgIndex) =>
-            img ? <img key={imgIndex} src={img} alt="Uploaded" width="100" /> : null
-          )}
-        </div>
-      ))}
-    </div>
-  );
-};
-
-export { UploadPage, DisplayPage };
- */
-
-
-import React, { useState, useEffect } from "react";
-import "./UploadPage.css";
-import { Buffer } from "buffer";
-
-const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
-const REPO_OWNER = "CazimMeskovic";
-const REPO_NAME = "emina3";
-const FILE_PATH = "data.json";
-
-
- 
-
-const updateGitHubFile = async (newEntry) => {
-  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`; 
-
-  try {
-    let currentData = [];
-    try {
-      const response = await fetch(`https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`);
-      if (response.ok) {
-        currentData = await response.json();
-      }
-    } catch (err) {
-      console.warn("Fajl ne postoji, kreiram novi.");
-    }
-
-    currentData.push(newEntry);
-
-    let sha = null;
-    const fileDataResponse = await fetch(url, {
-      headers: { Authorization: `token ${GITHUB_TOKEN}` },
-    });
-
-    if (fileDataResponse.ok) {
-      const fileData = await fileDataResponse.json();
-      sha = fileData.sha;
-    }
-
-    const updatedContent = JSON.stringify(currentData, null, 2);
-    const encodedContent = Buffer.from(updatedContent, 'utf-8').toString('base64');
-
-    const updateResponse = await fetch(url, {
-      method: "PUT",
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message: "Dodavanje novog unosa u data.json",
-        content: encodedContent,
-        sha: sha || undefined,
-      }),
-    });
-
-    if (updateResponse.ok) {
-      alert("Slike su uspešno spremljene!");
-      return true;
-    } else {
-      console.error("Greška pri ažuriranju fajla:", await updateResponse.text());
-      return false;
-    }
-  } catch (error) {
-    console.error("Greška pri povezivanju sa GitHub API-jem:", error);
-    return false;
-  }
-};
+import { supabase } from '../supabaseClient';
 
 const UploadPage = () => {
   const [text, setText] = useState("");
@@ -558,19 +8,31 @@ const UploadPage = () => {
   const [images, setImages] = useState([null, null, null, null, null]);
   const [previews, setPreviews] = useState([null, null, null, null, null]);
   const [buttonText, setButtonText] = useState("Objavi");
-  
+
   const handleImageChange = (e, index) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const newImages = [...images];
-        newImages[index] = reader.result;
-        setImages(newImages);
+        // Konverzija slike u WebP format
+        const img = new window.Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          // Dobij WebP base64 string
+          const webpDataUrl = canvas.toDataURL('image/webp', 0.8); // 0.8 je kvaliteta
+          const newImages = [...images];
+          newImages[index] = webpDataUrl;
+          setImages(newImages);
 
-        const newPreviews = [...previews];
-        newPreviews[index] = URL.createObjectURL(file);
-        setPreviews(newPreviews);
+          const newPreviews = [...previews];
+          newPreviews[index] = webpDataUrl;
+          setPreviews(newPreviews);
+        };
+        img.src = reader.result;
       };
       reader.readAsDataURL(file);
     }
@@ -580,33 +42,61 @@ const UploadPage = () => {
     e.preventDefault();
     setButtonText("Šaljem...");
 
-    const newEntry = { title, text, images: images.filter(Boolean) };
-    const success = await updateGitHubFile(newEntry);
+    try {
+      const newEntry = {
+        title,
+        text,
+        images: images.filter(Boolean),
+        created_at: new Date().toISOString()
+      };
 
-    if (success) {
+      const { error } = await supabase
+        .from('posts')
+        .insert([newEntry]);
+
+      if (error) throw error;
+
       setText("");
       setTitle("");
       setImages([null, null, null, null, null]);
       setPreviews([null, null, null, null, null]);
-      setButtonText("Objavi"); // Reset dugmeta nakon uspješnog slanja
-    } else {
+      setButtonText("Objavi");
+      alert("Objava je uspješno spremljena!");
+    } catch (error) {
+      console.error("Error inserting data:", error);
       setButtonText("Pokušaj ponovo");
+      alert("Došlo je do greške prilikom spremanja objave.");
     }
   };
 
   return (
     <div className="upload-main-div">
       <h2>Upload Teksta i Slika</h2>
-      
       <form onSubmit={handleSubmit} className="textItitle upload-form">
         <div className="textItitle">
-          <input type="text" placeholder="Unesi naslov" value={title} onChange={(e) => setTitle(e.target.value)} className="textItitle input-title" />
-          <textarea placeholder="Unesi opis" value={text} onChange={(e) => setText(e.target.value)} className="textItitle input-textarea" />
+          <input 
+            type="text" 
+            placeholder="Unesi naslov" 
+            value={title} 
+            onChange={(e) => setTitle(e.target.value)} 
+            className="textItitle input-title" 
+          />
+          <textarea 
+            placeholder="Unesi opis" 
+            value={text} 
+            onChange={(e) => setText(e.target.value)} 
+            className="textItitle input-textarea" 
+          />
         </div>
         
         {[0, 1, 2, 3, 4].map((index) => (
           <div key={index} className="textItitle image-upload">
-            <input className="textItitle" type="file" accept="image/*" onChange={(e) => handleImageChange(e, index)} />
+            <input 
+              className="textItitle" 
+              type="file" 
+              accept="image/*" 
+              onChange={(e) => handleImageChange(e, index)} 
+            />
             {previews[index] && <img src={previews[index]} alt="Preview" width="100" />}
           </div>
         ))}
@@ -623,18 +113,21 @@ const DisplayPage = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchPosts = async () => {
       try {
-        const response = await fetch(`https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`);
-        if (response.ok) {
-          const jsonData = await response.json();
-          setData(jsonData);
-        }
+        const { data: posts, error } = await supabase
+          .from('posts')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        setData(posts);
       } catch (err) {
         console.error("Greška pri učitavanju podataka:", err);
       }
     };
-    fetchData();
+
+    fetchPosts();
   }, []);
 
   return (

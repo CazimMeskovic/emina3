@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import ProjectCard from "./ProjectCards";
 import Particle from "../Particle";
 import Preloader from "../Pre"; // Uvezi Preloader
+import { supabase } from '../../supabaseClient';
 
 function Projects() {
   const [data, setData] = useState([]);
@@ -112,6 +113,7 @@ import { useNavigate } from "react-router-dom";
 import ProjectCard from "./ProjectCards";
 import Particle from "../Particle";
 import Preloader from "../Pre"; // Uvezi Preloader
+import { supabase } from "../../supabaseClient";
 
 function Projects() {
   const [data, setData] = useState([]);
@@ -120,25 +122,23 @@ function Projects() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const rawGithubUrl =
-      "https://raw.githubusercontent.com/CazimMeskovic/emina3/main/data.json";
+    const fetchProjects = async () => {
+      try {
+        const { data: posts, error } = await supabase
+          .from('posts')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-    fetch(rawGithubUrl)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setData(data);
+        if (error) throw error;
+        setData(posts);
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
+      } catch (error) {
+        console.error("Error fetching data from Supabase:", error);
         setError(error.message);
         setLoading(false);
-      });
+      }
+    };
+    fetchProjects();
   }, []);
 
   const handleDemoClick = (item) => {
