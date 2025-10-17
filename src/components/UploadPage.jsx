@@ -14,13 +14,25 @@ const UploadPage = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const newImages = [...images];
-        newImages[index] = reader.result;
-        setImages(newImages);
+        // Konverzija slike u WebP format
+        const img = new window.Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          // Dobij WebP base64 string
+          const webpDataUrl = canvas.toDataURL('image/webp', 0.8); // 0.8 je kvaliteta
+          const newImages = [...images];
+          newImages[index] = webpDataUrl;
+          setImages(newImages);
 
-        const newPreviews = [...previews];
-        newPreviews[index] = URL.createObjectURL(file);
-        setPreviews(newPreviews);
+          const newPreviews = [...previews];
+          newPreviews[index] = webpDataUrl;
+          setPreviews(newPreviews);
+        };
+        img.src = reader.result;
       };
       reader.readAsDataURL(file);
     }
