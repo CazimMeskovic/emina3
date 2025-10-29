@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Zamjena za useHistory
-import "./PasswordPage.css"
+import { useNavigate } from 'react-router-dom';
+import "./PasswordPage.css";
+import { supabase } from '../supabaseClient';
 
 
 const PasswordPage = () => {
@@ -14,14 +15,33 @@ const PasswordPage = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Očisti prethodne greške
 
     if (password === correctPassword) {
-      // Ako je šifra ispravna, preusmjerava na stranicu za upload
-      navigate('/upload');  // Koristi navigate umjesto history.push
+      try {
+        console.log('Pokušavam prijavu...'); // Debugging
+        
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: 'admin@emina.com',
+          password: 'eminahm83' // Koristi istu lozinku koju koristimo za provjeru
+        });
+
+        console.log('Rezultat prijave:', { data, error }); // Debugging
+
+        if (error) {
+          console.error('Detalji greške:', error);
+          throw error;
+        }
+        
+        console.log('Prijava uspješna, preusmjeravam...'); // Debugging
+        navigate('/upload');
+      } catch (error) {
+        console.error('Detalji greške pri prijavi:', error);
+        setError(`Greška pri prijavi: ${error.message}`);
+      }
     } else {
-      // Ako je šifra pogrešna, postavi grešku
       setError('Pogrešna šifra');
     }
   };

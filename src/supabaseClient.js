@@ -7,6 +7,18 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('Supabase URL ili Anon Key nisu pronađeni! Provjerite environment varijable.');
   console.log('URL:', supabaseUrl);
   console.log('ANON_KEY:', supabaseAnonKey ? 'Postoji' : 'Ne postoji');
+  throw new Error('Nedostaju Supabase kredencijali');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+console.log('Inicijaliziram Supabase sa:', { 
+  url: supabaseUrl,
+  hasKey: !!supabaseAnonKey 
+});
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+})

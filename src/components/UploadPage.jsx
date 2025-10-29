@@ -43,11 +43,18 @@ const UploadPage = () => {
     setButtonText("Šaljem...");
 
     try {
+      // Provjeri je li korisnik prijavljen
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('Niste prijavljeni. Molimo prijavite se.');
+      }
+
       const newEntry = {
         title,
         text,
         images: images.filter(Boolean),
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        user_id: session.user.id  // Dodaj ID korisnika koji je kreirao post
       };
 
       const { error } = await supabase
