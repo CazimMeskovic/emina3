@@ -15,28 +15,42 @@ function Projects() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // URL ka RAW verziji fajla
-    const rawGithubUrl =
-   
-      "https://raw.githubusercontent.com/CazimMeskovic/emina3/main/data.json";
-
-    fetch(rawGithubUrl)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setData(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setError(error.message);
-        setLoading(false);
-      });
+    fetchProjects();
   }, []);
+
+  const fetchProjects = async () => {
+    try {
+      const { data: projects, error } = await supabase
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setData(projects);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Jeste li sigurni da želite obrisati ovaj projekat?')) {
+      try {
+        const { error } = await supabase
+          .from('projects')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+        // Osvježi listu projekata nakon brisanja
+        fetchProjects();
+      } catch (error) {
+        console.error("Error deleting project:", error);
+      }
+    }
+  };
 
   const handleDemoClick = (item) => {
     navigate("/project-details", { state: { item } });
@@ -122,24 +136,41 @@ function Projects() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const { data: posts, error } = await supabase
-          .from('posts')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        setData(posts);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data from Supabase:", error);
-        setError(error.message);
-        setLoading(false);
-      }
-    };
     fetchProjects();
   }, []);
+
+  const fetchProjects = async () => {
+    try {
+      const { data: posts, error } = await supabase
+        .from('posts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setData(posts);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data from Supabase:", error);
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Jeste li sigurni da želite obrisati ovu objavu?')) {
+      try {
+        const { error } = await supabase
+          .from('posts')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+        fetchProjects(); // Refresh the list after deletion
+      } catch (error) {
+        console.error("Error deleting post:", error);
+      }
+    }
+  };
 
   const handleDemoClick = (item) => {
     navigate("/project-details", { state: { item } });
