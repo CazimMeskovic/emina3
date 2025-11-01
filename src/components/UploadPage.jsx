@@ -29,6 +29,20 @@ const UploadPage = () => {
     }
   }, [location.state]);
 
+  // Add this after your existing useEffect
+useEffect(() => {
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      alert('Morate biti prijavljeni da biste mogli uređivati objave.');
+      // Optionally redirect to login page
+      // navigate('/login');
+    }
+  };
+  
+  checkAuth();
+}, []);
+
   const fetchPosts = async () => {
     try {
       const { data, error } = await supabase
@@ -73,79 +87,163 @@ const UploadPage = () => {
     }
   };
 
-  const handleDelete = async (id) => {
+ /*  const handleDelete = async (id) => {
     if (window.confirm('Jeste li sigurni da želite obrisati ovu objavu?')) {
       try {
+        console.log("Deleting post id:", id);
         const { error } = await supabase
           .from('posts')
           .delete()
-          .eq('id', id);
+          .match({ id: id });
 
-        if (error) throw error;
-        fetchPosts();
+        if (error) {
+          console.error('Error deleting post:', error);
+          alert('Greška pri brisanju objave: ' + (error.message || JSON.stringify(error)));
+          return;
+        }
+        
+        // If we get here, delete was successful
+        console.log('Post deleted successfully');
+        await fetchPosts(); // Refresh the list
+        alert('Objava je uspješno obrisana.');
       } catch (error) {
         console.error("Error deleting post:", error);
+        alert('Došlo je do greške prilikom brisanja.');
       }
     }
   };
+ */
+const handleDelete = async (id) => {
+  if (window.confirm('Jeste li sigurni da želite obrisati ovu objavu?')) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        alert('Morate biti prijavljeni da biste obrisali objavu.');
+        return;
+      }
 
+      console.log("Deleting post id:", id);
+      const { error } = await supabase
+        .from('posts')
+        .delete()
+        .match({ 
+          id: id,
+          user_id: session.user.id 
+        });
+
+      if (error) {
+        console.error('Error deleting post:', error);
+        alert('Greška pri brisanju objave: ' + error.message);
+        return;
+      }
+      
+      console.log('Post deleted successfully');
+      await fetchPosts();
+      alert('Objava je uspješno obrisana.');
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      alert('Došlo je do greške prilikom brisanja.');
+    }
+  }
+};
   const handleEdit = (post) => {
-    setTitle(post.title);
-    setText(post.text);
-    setImages(post.images.concat(Array(5 - post.images.length).fill(null)));
-    setPreviews(post.images.concat(Array(5 - post.images.length).fill(null)));
+    const imgs = Array.isArray(post.images) ? post.images : [];
+    setTitle(post.title || "");
+    setText(post.text || "");
+    setImages(imgs.concat(Array(Math.max(0, 5 - imgs.length)).fill(null)));
+    setPreviews(imgs.concat(Array(Math.max(0, 5 - imgs.length)).fill(null)));
     setEditingId(post.id);
     setButtonText("Ažuriraj");
     window.scrollTo(0, 0);
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setButtonText(editingId ? "Ažuriranje..." : "Objavljujem...");
+  e.preventDefault();
+  setButtonText(editingId ? "Ažuriranje..." : "Objavljujem...");
 
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        throw new Error('Niste prijavljeni. Molimo prijavite se.');
-      }
-
-      const postData = {
-        title,
-        text,
-        images: images.filter(Boolean),
-        user_id: session.user.id
-      };
-
-      let error;
-      if (editingId) {
-        ({ error } = await supabase
-          .from('posts')
-          .update(postData)
-          .eq('id', editingId));
-      } else {
-        ({ error } = await supabase
-          .from('posts')
-          .insert([{ ...postData, created_at: new Date().toISOString() }]));
-      }
-
-      if (error) throw error;
-
-      // Reset form
-      setText("");
-      setTitle("");
-      setImages([null, null, null, null, null]);
-      setPreviews([null, null, null, null, null]);
-      setButtonText("Objavi");
-      setEditingId(null);
-      fetchPosts();
-      alert(editingId ? "Objava je uspješno ažurirana!" : "Objava je uspješno spremljena!");
-    } catch (error) {
-      console.error("Error:", error);
-      setButtonText(editingId ? "Ažuriraj" : "Objavi");
-      alert("Došlo je do greške.");
+  try {
+    console.log('Submitting. editingId =', editingId);
+    console.log("Checking auth session...");
+    const { data: { session }, error: authError } = await supabase.auth.getSession();
+    
+    if (authError) {
+      console.error("Auth error:", authError);
+      throw new Error('Greška pri provjeri autentifikacije');
     }
-  };
 
+    if (!session) {
+      console.error("No session found");
+      throw new Error('Niste prijavljeni. Molimo prijavite se.');
+    }
+
+    console.log("Session found, user_id:", session.user.id);
+
+    // Validate and prepare data
+    if (!title.trim() || !text.trim()) {
+      throw new Error('Naslov i opis su obavezni.');
+    }
+
+    const filteredImages = images.filter(Boolean);
+    console.log("Filtered images count:", filteredImages.length);
+
+    const postData = {
+      title: title.trim(),
+      text: text.trim(),
+      images: filteredImages // always send array (can be empty)
+    };
+
+    console.log("Preparing to save post data:", { ...postData, imageCount: filteredImages.length });
+
+    let result;
+    if (editingId) {
+      console.log("Updating existing post:", editingId);
+      const { data, error } = await supabase
+        .from('posts')
+        .update({
+          title: postData.title,
+          text: postData.text,
+          images: postData.images,
+          updated_at: new Date().toISOString()
+        })
+        .match({ 
+          id: editingId,
+          user_id: session.user.id 
+        });
+      result = { data, error };
+    } else {
+      console.log("Creating new post");
+      const { data, error } = await supabase
+        .from('posts')
+        .insert({
+          ...postData,
+          created_at: new Date().toISOString(),
+          user_id: session.user.id
+        });
+      result = { data, error };
+    }
+
+    console.log('supabase result:', result);
+    if (result?.error) {
+      console.error("Database error:", result.error);
+      throw new Error(result.error.message || 'Greška pri spremanju podataka');
+    }
+
+    console.log("Operation successful");
+    // Reset form
+    setText("");
+    setTitle("");
+    setImages([null, null, null, null, null]);
+    setPreviews([null, null, null, null, null]);
+    setButtonText("Objavi");
+    setEditingId(null);
+    fetchPosts();
+    alert(editingId ? "Objava je uspješno ažurirana!" : "Objava je uspješno spremljena!");
+  } catch (error) {
+    console.error("Full error details:", error);
+    setButtonText(editingId ? "Ažuriraj" : "Objavi");
+    alert(`Došlo je do greške: ${error.message || 'Nepoznata greška'}`);
+  }
+};
   return (
     <div className="upload-container">
       <div className="upload-form-container">
