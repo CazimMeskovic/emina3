@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { useNavigate, useLocation } from "react-router-dom";
+import {  useLocation } from "react-router-dom";
 import "./UploadPageNew.css";
 import { supabase } from '../supabaseClient';
 
@@ -12,7 +12,7 @@ const UploadPage = () => {
   const [previews, setPreviews] = useState([null, null, null, null, null]);
   const [buttonText, setButtonText] = useState("Objavi");
   const [editingId, setEditingId] = useState(null);
-  const navigate = useNavigate();
+ 
   const location = useLocation();
 
   useEffect(() => {

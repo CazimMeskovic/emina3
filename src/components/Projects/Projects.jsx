@@ -230,8 +230,8 @@ import { useData } from "../context/DataContext"; // uzmi podatke iz konteksta
 
 function Projects() {
   const { projects } = useData(); // prefetchovani projekti
-  const [loading, setLoading] = useState(!projects); // ako nema podataka, prikazi loading
-  const [error, setError] = useState(null);
+  const [loading, ] = useState(!projects); // ako nema podataka, prikazi loading
+  const [error, ] = useState(null);
   const navigate = useNavigate();
 
   const handleDemoClick = (item) => {
