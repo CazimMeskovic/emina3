@@ -25,44 +25,44 @@ function Footer() {
         <Col md="4" className="footer-body">
           <ul className="footer-icons">
             <li className="social-icons">
-              <a
+              <span
                 /*   href="https://github.com/soumyajit4419" */
                 style={{ color: "white" }}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <AiFillGithub />
-              </a>
+              </span>
             </li>
             <li className="social-icons">
-              <a
+              <span
                 /*   href="https://twitter.com/Soumyajit4419" */
                 style={{ color: "white" }}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <AiOutlineTwitter />
-              </a>
+              </span>
             </li>
             <li className="social-icons">
-              <a
+              <span
                 /* href="https://www.linkedin.com/in/soumyajit4419/" */
                 style={{ color: "white" }}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <FaLinkedinIn />
-              </a>
+              </span>
             </li>
             <li className="social-icons">
-              <a
+              <span
                 /*   href="https://www.instagram.com/soumyajit4419" */
                 style={{ color: "white" }}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <AiFillInstagram />
-              </a>
+              </span>
             </li>
           </ul>
         </Col>
