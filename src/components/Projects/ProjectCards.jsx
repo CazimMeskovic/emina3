@@ -85,6 +85,7 @@ function ProjectCard({ imgPath, title, ghLink, onDemoClick }) {
           )}
         </div>
       </Card.Body>
+      
     </Card>
   );
 }
