@@ -293,6 +293,8 @@ import { useData } from "../context/DataContext";
 
 function Projects() {
   const { projects } = useData();
+  console.log("✅ Projects data from context:", projects);
+
   const loading = !projects || projects.length === 0;
   const error = null;
   const navigate = useNavigate();
