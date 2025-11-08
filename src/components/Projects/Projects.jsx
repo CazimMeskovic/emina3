@@ -219,7 +219,7 @@ function Projects() {
 
 export default Projects;
  */
-
+/* 
 import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -273,6 +273,65 @@ function Projects() {
                   />
                 </Col>
               ))}
+          </Row>
+        )}
+      </Container>
+    </Container>
+  );
+}
+
+export default Projects;
+ */
+
+import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import ProjectCard from "./ProjectCards";
+import Particle from "../Particle";
+import Preloader from "../Pre";
+import { useData } from "../context/DataContext";
+
+function Projects() {
+  const { projects } = useData();
+  const loading = !projects || projects.length === 0;
+  const error = null;
+  const navigate = useNavigate();
+
+  const handleDemoClick = (item) => {
+    navigate("/project-details", { state: { item } });
+  };
+
+  return (
+    <Container fluid className="project-section">
+      <Particle />
+      <Container>
+        <h1 className="projectsJa project-heading">
+          Neki od <strong className="purple">mojih radova</strong>
+        </h1>
+        <p style={{ color: "white" }}>
+          Ovdje možete pogledati neke od mojih radova.
+        </p>
+
+        {loading ? (
+          <Preloader load={loading} />
+        ) : error ? (
+          <p style={{ color: "red" }}>Greška pri učitavanju podataka: {error}</p>
+        ) : (
+          <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
+            {projects.map((item, index) => (
+              <Col key={index} md={4} className="project-card">
+                <ProjectCard
+                  imgPath={
+                    item.images?.[0] || "/fallback-image.jpg"
+                  }
+                  isBlog={false}
+                  title={item.title || "Untitled Project"}
+                  description={item.text || "No description available."}
+                  ghLink={item.ghLink || "#"}
+                  onDemoClick={() => handleDemoClick(item)}
+                />
+              </Col>
+            ))}
           </Row>
         )}
       </Container>
