@@ -14,10 +14,13 @@ function Footer() {
     <Container fluid className="footerDno footer">
       <Row>
         <Col md="4" className="footer-copywright">
-          <h3>Developed by Mesko Development</h3>
+          <h3>Developed by Web Izrada Digital</h3>
         </Col>
         <Col md="4" className="footer-copywright">
-          <h3>Copyright © {year} MD</h3>
+        <a href="https://webizrada.ba/" style={{color:"white", background:"none", border:"none"  }} >
+   <h3>Copyright © {year} webizrada.ba</h3>
+        </a>
+       
         </Col>
         <Col md="4" className="footer-body">
           <ul className="footer-icons">

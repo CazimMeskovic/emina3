@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+/* import React, { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 import "./Kontakt.css";
 
@@ -96,8 +96,8 @@ const Contact = () => {
 };
 
 export default Contact;
+ */
 
-/* 
 import React, { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 import "./Kontakt.css";
@@ -113,83 +113,101 @@ const Contact = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({
-      ...form,
-      [name]: value,
-    });
+    setForm({ ...form, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("Submitting form with data:", form);
 
     emailjs
-      .sendForm(
-        "service_x6k12af",
-        "template_7e6hpg5", // Template ID
-        formRef.current, // Form reference
-        "cjQxd5nH8DzJeB5xN" // Public Key
+      .send(
+        "service_fb6cole",
+        "template_0c7uwfn",
+        {
+          from_name: form.name,
+          to_name: "EminaHM",
+          from_email: form.email,
+          to_email: "eminahm3@gmail.com",
+          message: form.message,
+        },
+        "7d_YURh6RshqTwNVO"
       )
       .then(
-        (response) => {
-          console.log("Email sent successfully:", response);
+        () => {
           setLoading(false);
-          alert("Thank you. I will get back to you as soon as possible.");
+          alert("✅ Poruka uspješno poslana!");
           setForm({ name: "", email: "", message: "" });
         },
         (error) => {
-          console.error("EmailJS Error:", error);
           setLoading(false);
-          alert("Ahh, something went wrong. Please try again.");
+          console.error(error);
+          alert("❌ Došlo je do greške, pokušajte ponovo.");
         }
       );
   };
 
   return (
-    <div className="contact-container">
-      <h3>Contact</h3>
-      <form ref={formRef} onSubmit={handleSubmit} className="contact-form">
-        <label>
-          Your Name
-          <input
-            type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Your name"
-            required
-          />
-        </label>
-        <label>
-          Your Email
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="Your email"
-            required
-          />
-        </label>
-        <label>
-          Your Message
-          <textarea
-            name="message"
-            value={form.message}
-            onChange={handleChange}
-            placeholder="Your message"
-            rows="5"
-            required
-          />
-        </label>
-        <button type="submit" disabled={loading}>
-          {loading ? "Sending..." : "Send"}
-        </button>
-      </form>
+    <div className="kontakt-wrapper">
+      {/* Lijeva strana – Forma */}
+      <div className="kontakt-card kontakt-forma">
+        <h3 className="kontakt-title">📩 Pošalji poruku</h3>
+        <form ref={formRef} onSubmit={handleSubmit} className="kontakt-form">
+          <label className="kontakt-label">
+           
+            <input
+              type="text"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Unesite vaše ime"
+              required
+              className="kontakt-input"
+            />
+          </label>
+          <label className="kontakt-label">
+            
+            <input
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="Unesite vaš email"
+              required
+              className="kontakt-input"
+            />
+          </label>
+          <label className="kontakt-label">
+            
+            <textarea
+              name="message"
+              value={form.message}
+              onChange={handleChange}
+              placeholder="Unesite vašu poruku"
+              rows="5"
+              required
+              className="kontakt-textarea"
+            />
+          </label>
+          <button type="submit" disabled={loading} className="kontakt-btn">
+            {loading ? "Šaljem..." : "Pošalji poruku"}
+          </button>
+        </form>
+      </div>
+
+      {/* Desna strana – Kontakt info */}
+      <div className="kontakt-card kontakt-info">
+        <h3 className="kontakt-title">📍 Kontaktirajte nas</h3>
+        <p className="kontakt-text">
+          <strong>Emina H-M</strong>
+        </p>
+       {/*  <p className="kontakt-text">🌆 Grad: Bihać</p> */}
+        <p className="kontakt-text">📞 Telefon: <a href="tel:+387603116299">+387 60 311 62 99</a></p>
+       {/*  <p className="kontakt-text">🌐 Web: <a href="https://webizrada.ba">webizrada.ba</a></p> */}
+        <div className="kontakt-glow"></div>
+      </div>
     </div>
   );
 };
 
 export default Contact;
- */

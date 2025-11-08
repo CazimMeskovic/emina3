@@ -61,11 +61,11 @@ import { Card, Button } from "react-bootstrap"; */
 import React from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { CgWebsite } from "react-icons/cg";
-import { BsGithub } from "react-icons/bs";
+/* import { CgWebsite } from "react-icons/cg"; */
+/* import { BsGithub } from "react-icons/bs"; */
 import "./ProjectCards.css"
 
-function ProjectCard({ imgPath, title, description, ghLink, demoLink, onDemoClick }) {
+function ProjectCard({ imgPath, title, ghLink, onDemoClick }) {
   return (
     <Card className="project-card-view">
       <Card.Img  variant="top" src={imgPath} alt="card-img" />
