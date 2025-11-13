@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import ProjectCard from "./ProjectCards";
 import Particle from "../Particle";
 import Preloader from "../Pre"; // Uvezi Preloader
-import { supabase } from '../../supabaseClient';
+import { supabase } from '../../lib/supabaseClient';
 
 function Projects() {
   const [data, setData] = useState([]);
@@ -76,7 +76,7 @@ function Projects() {
                 <ProjectCard
                   imgPath={
                     item.images && item.images.length > 0
-                      ? item.images[0] // Prva slika u nizu
+                      ? item.images[0]
                       : "/fallback-image.jpg"
                   }
                   isBlog={false}
@@ -85,6 +85,8 @@ function Projects() {
                   ghLink={item.ghLink || "#"}
                   demoLink="#"
                   onDemoClick={() => handleDemoClick(item)}
+                  project={item}
+                  onDelete={handleDelete}
                 />
                 <Row>
                   {item.images && item.images.length > 0 ? (
@@ -127,7 +129,7 @@ import { useNavigate } from "react-router-dom";
 import ProjectCard from "./ProjectCards";
 import Particle from "../Particle";
 import Preloader from "../Pre"; // Uvezi Preloader
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 
 function Projects() {
   const [data, setData] = useState([]);
@@ -283,9 +285,11 @@ function Projects() {
 export default Projects;
  */
 
+"use client"
+
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/navigation'
 import ProjectCard from "./ProjectCards";
 import Particle from "../Particle";
 import Preloader from "../Pre";
@@ -297,10 +301,11 @@ function Projects() {
 
   const loading = !projects || projects.length === 0;
   const error = null;
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleDemoClick = (item) => {
-    navigate("/project-details", { state: { item } });
+    // Navigate to the project details dynamic route
+    if (item && item.id) router.push(`/project/${item.id}`);
   };
 
   return (

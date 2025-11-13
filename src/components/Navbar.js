@@ -1,10 +1,13 @@
+'use client'
+"use client"
+
 import React, { useState } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
 import logo from "../Assets/about.png";
 
-import { Link } from "react-router-dom";
+import Link from 'next/link'
 
 
 import {
@@ -54,51 +57,55 @@ function NavBar() {
         </Navbar.Toggle>
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ms-auto" defaultActiveKey="#home">
+              <Nav.Item>
+                <Nav.Link as="div">
+                  <Link href="/" legacyBehavior>
+                    <a onClick={() => updateExpanded(false)}>
+                      <AiOutlineHome style={{ marginBottom: "2px" }} /> Početna
+                    </a>
+                  </Link>
+                </Nav.Link>
+              </Nav.Item>
+
             <Nav.Item>
-              <Nav.Link as={Link} to="/" onClick={() => updateExpanded(false)}>
-                <AiOutlineHome style={{ marginBottom: "2px" }} /> Početna
+              <Nav.Link as="div">
+                <Link href="/about" legacyBehavior>
+                  <a onClick={() => updateExpanded(false)}>
+                    <AiOutlineUser style={{ marginBottom: "2px" }} /> O meni
+                  </a>
+                </Link>
               </Nav.Link>
             </Nav.Item>
 
             <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/about"
-                onClick={() => updateExpanded(false)}
-              >
-                <AiOutlineUser style={{ marginBottom: "2px" }} /> O meni
+              <Nav.Link as="div">
+                <Link href="/project" legacyBehavior>
+                  <a onClick={() => updateExpanded(false)}>
+                    <AiOutlineFundProjectionScreen
+                      style={{ marginBottom: "2px" }}
+                    />{' '}
+                    Projekti
+                  </a>
+                </Link>
               </Nav.Link>
             </Nav.Item>
-
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/project"
-                onClick={() => updateExpanded(false)}
-              >
-                <AiOutlineFundProjectionScreen
-                  style={{ marginBottom: "2px" }}
-                />{" "}
-                Projekti
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Link
-                as={Link}
-                to="/password"
-                onClick={() => updateExpanded(false)}
-              >
-                <AiOutlineFundProjectionScreen
-                  style={{ marginBottom: "2px" }}
-                />{" "}
-                Objavi
-              </Nav.Link>
-              <Nav.Link
-                as={Link}
-                to="/kontakt"
-                onClick={() => updateExpanded(false)}
-              >
-                <AiOutlineUser style={{ marginBottom: "2px" }} /> Kontakt
-              </Nav.Link>
+            <Nav.Link as="div">
+              <Link href="/password" legacyBehavior>
+                <a onClick={() => updateExpanded(false)}>
+                  <AiOutlineFundProjectionScreen
+                    style={{ marginBottom: "2px" }}
+                  />{' '}
+                  Objavi
+                </a>
+              </Link>
+            </Nav.Link>
+            <Nav.Link as="div">
+              <Link href="/kontakt" legacyBehavior>
+                <a onClick={() => updateExpanded(false)}>
+                  <AiOutlineUser style={{ marginBottom: "2px" }} /> Kontakt
+                </a>
+              </Link>
+            </Nav.Link>
             
 
             {/* <Nav.Item>

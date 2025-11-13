@@ -327,37 +327,53 @@ export default ProjectDetails;
 
  */
 
+"use client"
+
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "next/navigation";
 import { Container } from "react-bootstrap";
 import Particle from "../Particle";
 import "./ProjectDetails.css";
+import { supabase } from '../../../lib/supabaseClient';
 
-function ProjectDetails() {
-  const location = useLocation();
-  const { item } = location.state || {};
+function ProjectDetails({ item: propItem }) {
+  const params = useParams();
+  const [localItem, setLocalItem] = useState(propItem || null);
   const [overlayImage, setOverlayImage] = useState(null);
 
   // Koristimo useRef da bismo pratili slike
   const mainImageRef = useRef(null);
   const sideImageRefs = useRef([]);
 
-  // Proveravamo da li je `item` validan i sadrži slike
+  // Ako komponenta nije dobila `item` putem props, dohvatimo iz Supabase po id-u
   useEffect(() => {
-    console.log("✅ Item:", item);
-    if (item) {
-      console.log("✅ Lista slika:", item.images);
+    const id = propItem?.id || params?.id;
+    if (!propItem && id) {
+      const fetchItem = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('posts')
+            .select('*')
+            .eq('id', id)
+            .single();
+          if (error) throw error;
+          setLocalItem(data);
+        } catch (err) {
+          console.error('Error fetching post for ProjectDetails:', err);
+        }
+      };
+      fetchItem();
     }
-  }, [item]);
+  }, [propItem, params]);
 
   const openOverlay = (image) => {
-    console.log("🖼 Slika za overlay: ", image); // Ispisujemo koja slika ide u overlay
-    setOverlayImage(image); // Postavljanje slike za overlay
+    console.log("🖼 Slika za overlay: ", image);
+    setOverlayImage(image);
   };
 
   const closeOverlay = () => {
     console.log("❌ Overlay zatvoren");
-    setOverlayImage(null); // Zatvaranje overlay-a
+    setOverlayImage(null);
   };
 
   // Koristimo onLoad za slike da bismo pratili kad su učitane
@@ -371,46 +387,46 @@ function ProjectDetails() {
       <Container>
         <div className="image-grid">
           {/* Glavna slika */}
-          {item?.images && item.images.length > 0 && (
+          {localItem?.images && localItem.images.length > 0 && (
             <img
-              ref={mainImageRef}  // Povezivanje sa ref
-              src={item.images[0]}
+              ref={mainImageRef}
+              src={localItem.images[0]}
               alt="Main Project"
               className="main-image"
               onClick={() => {
                 console.log("🖼 Kliknuto na glavnu sliku!");
-                openOverlay(item.images[0]); // Direktno onClick poziv
+                openOverlay(localItem.images[0]);
               }}
               onError={(e) => (e.target.src = "/fallback-image.jpg")}
-              onLoad={() => handleImageLoad(0)} // Praćenje kada je slika učitana
+              onLoad={() => handleImageLoad(0)}
             />
           )}
 
           {/* Sporedne slike */}
           <div className="side-images">
-            {item?.images?.slice(1).map((img, index) => (
+            {localItem?.images?.slice(1).map((img, index) => (
               img && (
                 <img
                   key={index}
-                  ref={(el) => sideImageRefs.current[index] = el}  // Povezivanje sa ref
+                  ref={(el) => (sideImageRefs.current[index] = el)}
                   src={img}
                   alt={`Project ${index + 1}`}
                   className="side-image"
                   onClick={() => {
                     console.log(`🖼 Kliknuto na sliku ${index + 1}!`);
-                    openOverlay(img); // Direktni onClick poziv
+                    openOverlay(img);
                   }}
                   onError={(e) => (e.target.src = "/fallback-image.jpg")}
-                  onLoad={() => handleImageLoad(index + 1)} // Praćenje kada je slika učitana
+                  onLoad={() => handleImageLoad(index + 1)}
                 />
               )
             ))}
           </div>
 
           <h1 className="project-heading">
-            <strong className="polozajTitla purple">{item.title || "No Title"}</strong>
+            <strong className="polozajTitla purple">{localItem?.title || "No Title"}</strong>
           </h1>
-          <p className="project-description">{item.text || "No description available."}</p>
+          <p className="project-description">{localItem?.text || "No description available."}</p>
         </div>
       </Container>
 

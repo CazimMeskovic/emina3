@@ -16,7 +16,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import "./style.css";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { UploadPage, DisplayPage } from "./components/UploadPage";
+import { UploadPage } from "./components/UploadPage";
 import ProjectDetails from "./components/Projects/ProjectDetails";
 import PasswordPage from "./components/PasswordPage ";
 import Kontakt from "./components/Kontakt";
@@ -85,7 +85,7 @@ import Kontakt from "./components/Kontakt";
 
 /* import { DataProvider, useData } from "./context/DataContext"; */
 import { DataProvider, useData } from "./components/context/DataContext";
-import { supabase } from "./supabaseClient";
+import { supabase } from "../lib/supabaseClient";
 
 function App() {
   const [load, upadateLoad] = useState(true);
@@ -115,7 +115,7 @@ function App() {
             <Route path="/resume" element={<Resume />} />
             <Route path="*" element={<Navigate to="/" />} />
 
-            <Route path="/prikaz" element={<DisplayPage />} />
+            <Route path="/prikaz" element={<Projects />} />
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/project-details" element={<ProjectDetails />} />
             <Route path="/password" element={<PasswordPage />} />

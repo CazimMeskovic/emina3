@@ -61,31 +61,31 @@ import { Card, Button } from "react-bootstrap"; */
 import React from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-/* import { CgWebsite } from "react-icons/cg"; */
-/* import { BsGithub } from "react-icons/bs"; */
+import Link from 'next/link'
 import "./ProjectCards.css"
 
-function ProjectCard({ imgPath, title, ghLink, onDemoClick }) {
+function ProjectCard({ imgPath, title, ghLink, onDemoClick, project, onDelete }) {
   return (
     <Card className="project-card-view">
       <Card.Img  variant="top" src={imgPath} alt="card-img" />
       <Card.Body>
         <Card.Title  >{title}</Card.Title>
-        {/*  <Card.Text>{description}</Card.Text>  */}
         <div>
-          {ghLink && (<span></span>
-           /*  <Button variant="primary" href={ghLink} target="_blank" rel="noopener noreferrer">
-              GitHub
-            </Button> */
-          )}
           {onDemoClick && (
             <Button variant="success" onClick={onDemoClick} style={{ marginLeft: "10px" }}>
              Pogledaj Detaljno
             </Button>
           )}
+          <div style={{ display: 'inline-block', marginLeft: 8 }}>
+            <Link href={`/upload?id=${project?.id}`} legacyBehavior>
+              <a className="btn btn-warning mx-1" style={{ textDecoration: 'none' }}>Uredi</a>
+            </Link>
+            <Button variant="danger" onClick={() => onDelete && onDelete(project?.id)} className="mx-1">
+              Obriši
+            </Button>
+          </div>
         </div>
       </Card.Body>
-      
     </Card>
   );
 }

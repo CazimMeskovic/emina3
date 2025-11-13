@@ -1,8 +1,10 @@
+"use client"
+
 import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import {  useLocation } from "react-router-dom";
+import { useSearchParams, useRouter } from 'next/navigation'
 import "./UploadPageNew.css";
-import { supabase } from '../supabaseClient';
+import { supabase } from '../../lib/supabaseClient';
 
 const UploadPage = () => {
   const [posts, setPosts] = useState([]);
@@ -13,21 +15,35 @@ const UploadPage = () => {
   const [buttonText, setButtonText] = useState("Objavi");
   const [editingId, setEditingId] = useState(null);
  
-  const location = useLocation();
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
     fetchPosts();
-    // Check if we're editing an existing post
-    if (location.state?.project) {
-      const project = location.state.project;
-      setTitle(project.title);
-      setText(project.text);
-      setImages(project.images || [null, null, null, null, null]);
-      setPreviews(project.images || [null, null, null, null, null]);
-      setEditingId(project.id);
-      setButtonText("Ažuriraj");
+    // If query contains id, load post for editing
+    const id = searchParams.get('id');
+    if (id) {
+      (async () => {
+        try {
+          const { data: post, error } = await supabase
+            .from('posts')
+            .select('*')
+            .eq('id', id)
+            .single();
+          if (error) throw error;
+          const imgs = Array.isArray(post.images) ? post.images : [];
+          setTitle(post.title || "");
+          setText(post.text || "");
+          setImages(imgs.concat(Array(Math.max(0, 5 - imgs.length)).fill(null)));
+          setPreviews(imgs.concat(Array(Math.max(0, 5 - imgs.length)).fill(null)));
+          setEditingId(post.id);
+          setButtonText("Ažuriraj");
+        } catch (err) {
+          console.error('Error loading post for edit:', err);
+        }
+      })();
     }
-  }, [location.state]);
+  }, [searchParams]);
 
   // Add this after your existing useEffect
 useEffect(() => {
