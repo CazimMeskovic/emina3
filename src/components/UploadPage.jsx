@@ -148,11 +148,11 @@ const UploadPage = () => {
     }
   };
   const handleEdit = (post) => {
-    const imgs = Array.isArray(post.images) ? post.images : [];
     setTitle(post.title || "");
     setText(post.text || "");
-    setImages(imgs.concat(Array(Math.max(0, 5 - imgs.length)).fill(null)));
-    setPreviews(imgs.concat(Array(Math.max(0, 5 - imgs.length)).fill(null)));
+    // Postoji li image_url? Postavi ga kao preview i url
+    setImageUrls([post.image_url || null, null, null, null, null]);
+    setPreviews([post.image_url || null, null, null, null, null]);
     setEditingId(post.id);
     setButtonText("Ažuriraj");
     window.scrollTo(0, 0);
@@ -297,37 +297,43 @@ const UploadPage = () => {
         </form>
       </div>
 
-      <h2 className="section-title">Sve Objave</h2>
+      <h2 className="section-title">Svi Projekti</h2>
       <div className="posts-container">
-        {posts.map((post) => (
-          <div key={post.id} className="post-card">
-            <h3 className="post-title">{post.title}</h3>
-            <p className="post-description">{post.text}</p>
-            {post.image_url && (
-              <div className="post-images">
-                <img
-                  src={post.image_url}
-                  alt={post.title}
-                  className="post-image"
-                />
+        {posts.length === 0 ? (
+          <div style={{ color: "white" }}>Trenutno nema dostupnih projekata.</div>
+        ) : (
+          posts.map((post) => (
+            <div key={post.id} className="post-card">
+              <h3 className="post-title">{post.title}</h3>
+              <p className="post-description">{post.text}</p>
+              {post.image_url ? (
+                <div className="post-images">
+                  <img
+                    src={post.image_url}
+                    alt={post.title}
+                    className="post-image"
+                  />
+                </div>
+              ) : (
+                <div style={{ color: "gray" }}>Nema slike</div>
+              )}
+              <div className="post-actions">
+                <button
+                  className="btn-edit"
+                  onClick={() => handleEdit(post)}
+                >
+                  <FaEdit /> Uredi
+                </button>
+                <button
+                  className="btn-delete"
+                  onClick={() => handleDelete(post.id)}
+                >
+                  <FaTrash /> Obriši
+                </button>
               </div>
-            )}
-            <div className="post-actions">
-              <button
-                className="btn-edit"
-                onClick={() => handleEdit(post)}
-              >
-                <FaEdit /> Uredi
-              </button>
-              <button
-                className="btn-delete"
-                onClick={() => handleDelete(post.id)}
-              >
-                <FaTrash /> Obriši
-              </button>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
