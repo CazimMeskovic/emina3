@@ -374,6 +374,11 @@ function ProjectDetails() {
   if (error) return <div style={{ color: 'red', padding: '2rem' }}>Greška: {error}</div>;
   if (!item) return <div style={{ color: 'white', padding: '2rem' }}>Projekt nije pronađen.</div>;
 
+  // Use image_urls if present, otherwise fallback to image_url
+  const imagesToShow = Array.isArray(item.image_urls) && item.image_urls.length > 0
+    ? item.image_urls.filter(Boolean)
+    : item.image_url ? [item.image_url] : [];
+
   return (
     <Container fluid className="project-details-section">
       <Particle />
@@ -383,8 +388,8 @@ function ProjectDetails() {
         </h1>
         <p className="project-description">{item.text || "No description available."}</p>
         <div className="image-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', marginTop: '24px' }}>
-          {item.image_urls && item.image_urls.length > 0 ? (
-            item.image_urls.map((img, idx) => (
+          {imagesToShow.length > 0 ? (
+            imagesToShow.map((img, idx) => (
               <img
                 key={idx}
                 src={img || "/fallback-image.jpg"}
@@ -396,14 +401,7 @@ function ProjectDetails() {
               />
             ))
           ) : (
-            <img
-              src={item.image_url || "/fallback-image.jpg"}
-              alt={item.title}
-              className="main-image"
-              onClick={() => openOverlay(item.image_url)}
-              onError={(e) => (e.target.src = "/fallback-image.jpg")}
-              style={{ cursor: "pointer", maxWidth: "320px", maxHeight: "220px", borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}
-            />
+            <p style={{ color: 'white' }}>Nema slika za ovaj projekat.</p>
           )}
         </div>
       </Container>

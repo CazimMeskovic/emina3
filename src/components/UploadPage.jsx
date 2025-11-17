@@ -9,9 +9,9 @@ const UploadPage = () => {
   const [posts, setPosts] = useState([]);
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
-  const [images, setImages] = useState([]);
-  const [previews, setPreviews] = useState([]);
-  const [imageUrls, setImageUrls] = useState([]);
+  const [images, setImages] = useState([null, null, null, null, null]);
+  const [previews, setPreviews] = useState([null, null, null, null, null]);
+  const [imageUrls, setImageUrls] = useState([null, null, null, null, null]);
   const [buttonText, setButtonText] = useState("Objavi");
   const [editingId, setEditingId] = useState(null);
 
@@ -69,31 +69,30 @@ const UploadPage = () => {
   };
 
   const handleImageChange = async (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) return;
-    let urls = [];
-    let previewsArr = [];
-    for (let file of files) {
-      const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}_${file.name}`;
-      const { data, error } = await supabase.storage
-        .from("project-images")
-        .upload(fileName, file);
-      if (error || !data) {
-        alert("Greška pri uploadu slike! " + (error?.message || ""));
-        continue;
-      }
-      const { data: urlData, error: urlError } = supabase.storage
-        .from("project-images")
-        .getPublicUrl(fileName);
-      if (urlError || !urlData?.publicUrl) {
-        alert("Greška pri dohvaćanju URL-a slike! " + (urlError?.message || ""));
-        continue;
-      }
-      urls.push(urlData.publicUrl);
-      previewsArr.push(urlData.publicUrl);
+    const idx = parseInt(e.target.dataset.idx);
+    const file = e.target.files[0];
+    if (!file) return;
+    const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}_${file.name}`;
+    const { data, error } = await supabase.storage
+      .from("project-images")
+      .upload(fileName, file);
+    if (error || !data) {
+      alert("Greška pri uploadu slike! " + (error?.message || ""));
+      return;
     }
-    setImageUrls(urls);
-    setPreviews(previewsArr);
+    const { data: urlData, error: urlError } = supabase.storage
+      .from("project-images")
+      .getPublicUrl(fileName);
+    if (urlError || !urlData?.publicUrl) {
+      alert("Greška pri dohvaćanju URL-a slike! " + (urlError?.message || ""));
+      return;
+    }
+    const newImageUrls = [...imageUrls];
+    const newPreviews = [...previews];
+    newImageUrls[idx] = urlData.publicUrl;
+    newPreviews[idx] = urlData.publicUrl;
+    setImageUrls(newImageUrls);
+    setPreviews(newPreviews);
   };
 
   /*  const handleDelete = async (id) => {
@@ -281,25 +280,29 @@ const UploadPage = () => {
           />
 
           <div className="image-upload-container">
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageChange}
-              style={{ display: 'none' }}
-              id="image-input-multi"
-            />
-            <label htmlFor="image-input-multi" className="image-upload-box" style={{ width: '100%' }}>
-              {previews.length > 0 ? (
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', width: '100%' }}>
-                  {previews.map((preview, idx) => (
-                    <img key={idx} src={preview} alt="Preview" className="image-preview" />
-                  ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
+              {[0,1,2,3,4].map(idx => (
+                <div key={idx} style={{ marginBottom: '8px' }}>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    data-idx={idx}
+                    id={`image-input-${idx}`}
+                    style={{ display: 'none' }}
+                  />
+                  <label htmlFor={`image-input-${idx}`} className="image-upload-box" style={{ width: '100%', cursor: 'pointer', display: 'block', marginBottom: '8px' }}>
+                    {previews[idx] ? (
+                      <img src={previews[idx]} alt={`Preview ${idx+1}`} style={{ width: '100%', maxHeight: '300px', objectFit: 'cover', borderRadius: '8px', border: '2px solid #eee' }} />
+                    ) : (
+                      <div style={{ height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#222', color: '#fff', borderRadius: '8px', border: '2px dashed #555' }}>
+                        {`Browse slika ${idx+1}`}
+                      </div>
+                    )}
+                  </label>
                 </div>
-              ) : (
-                <div>Dodaj slike</div>
-              )}
-            </label>
+              ))}
+            </div>
           </div>
 
           <button type="submit" className="submit-button" disabled={!title || !text}>
