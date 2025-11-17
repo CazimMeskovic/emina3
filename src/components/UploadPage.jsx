@@ -1,33 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
-import "./UploadPageNew.css";
+ import "./UploadPageNew.css"; 
+
 import { supabase } from '../supabaseClient';
 
 const UploadPage = () => {
   const [posts, setPosts] = useState([]);
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
-  const [images, setImages] = useState([null, null, null, null, null]);
-  const [previews, setPreviews] = useState([null, null, null, null, null]);
-  const [imageUrls, setImageUrls] = useState([null, null, null, null, null]);
+  const [images, setImages] = useState([]);
+  const [previews, setPreviews] = useState([]);
+  const [imageUrls, setImageUrls] = useState([]);
   const [buttonText, setButtonText] = useState("Objavi");
   const [editingId, setEditingId] = useState(null);
 
   const location = useLocation();
 
   useEffect(() => {
-    fetchPosts();
+    let isMounted = true;
+    const fetchAndSetPosts = async () => {
+      await fetchPosts();
+    };
+    fetchAndSetPosts();
     // Check if we're editing an existing post
     if (location.state?.project) {
       const project = location.state.project;
-      setTitle(project.title);
-      setText(project.text);
-      setImages(project.images || [null, null, null, null, null]);
-      setPreviews(project.images || [null, null, null, null, null]);
-      setEditingId(project.id);
-      setButtonText("Ažuriraj");
+      if (isMounted) {
+        setTitle(project.title);
+        setText(project.text);
+        setImages(project.images || [null, null, null, null, null]);
+        setPreviews(project.images || [null, null, null, null, null]);
+        setEditingId(project.id);
+        setButtonText("Ažuriraj");
+      }
     }
+    return () => {
+      isMounted = false;
+    };
   }, [location.state]);
 
   // Add this after your existing useEffect
@@ -58,34 +68,32 @@ const UploadPage = () => {
     }
   };
 
-  const handleImageChange = async (e, index) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Upload to Supabase Storage
-      const fileName = `${Date.now()}_${file.name}`;
+  const handleImageChange = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    let urls = [];
+    let previewsArr = [];
+    for (let file of files) {
+      const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}_${file.name}`;
       const { data, error } = await supabase.storage
         .from("project-images")
         .upload(fileName, file);
-      if (error) {
-        alert("Greška pri uploadu slike!");
-        return;
+      if (error || !data) {
+        alert("Greška pri uploadu slike! " + (error?.message || ""));
+        continue;
       }
-      // Get public URL
-      const { data: urlData } = supabase.storage
+      const { data: urlData, error: urlError } = supabase.storage
         .from("project-images")
         .getPublicUrl(fileName);
-      const publicUrl = urlData.publicUrl;
-      setImageUrls(prev => {
-        const newUrls = [...prev];
-        newUrls[index] = publicUrl;
-        return newUrls;
-      });
-      setPreviews(prev => {
-        const newPreviews = [...prev];
-        newPreviews[index] = publicUrl;
-        return newPreviews;
-      });
+      if (urlError || !urlData?.publicUrl) {
+        alert("Greška pri dohvaćanju URL-a slike! " + (urlError?.message || ""));
+        continue;
+      }
+      urls.push(urlData.publicUrl);
+      previewsArr.push(urlData.publicUrl);
     }
+    setImageUrls(urls);
+    setPreviews(previewsArr);
   };
 
   /*  const handleDelete = async (id) => {
@@ -186,11 +194,16 @@ const UploadPage = () => {
 
       const filteredImageUrls = imageUrls.filter(Boolean);
       console.log("Filtered image URLs count:", filteredImageUrls.length);
-
+      if (filteredImageUrls.length === 0) {
+        setButtonText(editingId ? "Ažuriraj" : "Objavi");
+        alert("Morate dodati barem jednu sliku!");
+        return;
+      }
       const postData = {
         title: title.trim(),
         text: text.trim(),
-        image_url: filteredImageUrls[0] || null // samo prvi url, možeš proširiti na array ako želiš
+        image_url: filteredImageUrls[0] || null, // for backward compatibility
+        image_urls: filteredImageUrls // new array column for all images
       };
 
       console.log("Preparing to save post data:", { ...postData, imageCount: filteredImageUrls.length });
@@ -204,6 +217,7 @@ const UploadPage = () => {
             title: postData.title,
             text: postData.text,
             image_url: postData.image_url,
+            image_urls: postData.image_urls,
             updated_at: new Date().toISOString()
           })
           .match({
@@ -267,24 +281,25 @@ const UploadPage = () => {
           />
 
           <div className="image-upload-container">
-            {[0, 1, 2, 3, 4].map((index) => (
-              <div key={index} className="image-upload-box">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageChange(e, index)}
-                  style={{ display: 'none' }}
-                  id={`image-input-${index}`}
-                />
-                <label htmlFor={`image-input-${index}`}>
-                  {previews[index] ? (
-                    <img src={previews[index]} alt="Preview" className="image-preview" />
-                  ) : (
-                    <div>Dodaj sliku {index + 1}</div>
-                  )}
-                </label>
-              </div>
-            ))}
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageChange}
+              style={{ display: 'none' }}
+              id="image-input-multi"
+            />
+            <label htmlFor="image-input-multi" className="image-upload-box" style={{ width: '100%' }}>
+              {previews.length > 0 ? (
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', width: '100%' }}>
+                  {previews.map((preview, idx) => (
+                    <img key={idx} src={preview} alt="Preview" className="image-preview" />
+                  ))}
+                </div>
+              ) : (
+                <div>Dodaj slike</div>
+              )}
+            </label>
           </div>
 
           <button type="submit" className="submit-button" disabled={!title || !text}>
@@ -303,33 +318,44 @@ const UploadPage = () => {
           <div style={{ color: "white" }}>Trenutno nema dostupnih projekata.</div>
         ) : (
           posts.map((post) => (
-            <div key={post.id} className="post-card">
-              <h3 className="post-title">{post.title}</h3>
-              <p className="post-description">{post.text}</p>
-              {post.image_url ? (
-                <div className="post-images">
+            <div key={post.id} className="project-card">
+              <div className="project-card-view">
+                {/* Show all images if available, fallback to image_url or fallback image */}
+                {post.image_urls && post.image_urls.length > 0 ? (
+                  post.image_urls.map((img, idx) => (
+                    <img
+                      key={idx}
+                      src={img || "/fallback-image.jpg"}
+                      alt={post.title}
+                      className="post-image"
+                      style={{ marginBottom: "8px" }}
+                    />
+                  ))
+                ) : (
                   <img
-                    src={post.image_url}
+                    src={post.image_url || "/fallback-image.jpg"}
                     alt={post.title}
                     className="post-image"
                   />
+                )}
+                <div className="project-card-body">
+                  <h3 className="post-title">{post.title}</h3>
+                  <p className="post-description">{post.text}</p>
+                  <div className="post-actions">
+                    <button
+                      className="btn-edit"
+                      onClick={() => handleEdit(post)}
+                    >
+                      <FaEdit /> Uredi
+                    </button>
+                    <button
+                      className="btn-delete"
+                      onClick={() => handleDelete(post.id)}
+                    >
+                      <FaTrash /> Obriši
+                    </button>
+                  </div>
                 </div>
-              ) : (
-                <div style={{ color: "gray" }}>Nema slike</div>
-              )}
-              <div className="post-actions">
-                <button
-                  className="btn-edit"
-                  onClick={() => handleEdit(post)}
-                >
-                  <FaEdit /> Uredi
-                </button>
-                <button
-                  className="btn-delete"
-                  onClick={() => handleDelete(post.id)}
-                >
-                  <FaTrash /> Obriši
-                </button>
               </div>
             </div>
           ))

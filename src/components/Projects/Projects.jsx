@@ -235,7 +235,11 @@ function Projects() {
   const navigate = useNavigate();
 
   const handleDemoClick = (item) => {
-    navigate("/project-details", { state: { item } });
+      // Automatski preusmjeri na staru rutu ako treba
+      if (item && item.id) {
+       navigate(`/project-details?id=${item.id}`);
+       // Za novu rutu koristi: router.push(`/project/${item.id}`);
+      }
   };
 
   return (

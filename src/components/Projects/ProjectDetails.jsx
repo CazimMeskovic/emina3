@@ -332,93 +332,86 @@ import { useLocation } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import Particle from "../Particle";
 import "./ProjectDetails.css";
+import { supabase } from '../../supabaseClient';
 
 function ProjectDetails() {
   const location = useLocation();
-  const { item } = location.state || {};
+  const { item: initialItem } = location.state || {};
+  const [item, setItem] = useState(initialItem || null);
   const [overlayImage, setOverlayImage] = useState(null);
+  const [loading, setLoading] = useState(!initialItem);
+  const [error, setError] = useState(null);
 
-  // Koristimo useRef da bismo pratili slike
-  const mainImageRef = useRef(null);
-  const sideImageRefs = useRef([]);
-
-  // Proveravamo da li je `item` validan i sadrži slike
   useEffect(() => {
-    console.log("✅ Item:", item);
-    if (item) {
-      console.log("✅ Lista slika:", item.images);
+    // If no item in state, fetch from Supabase by id in query params
+    if (!item && location.state?.item?.id) {
+      const fetchPost = async () => {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('posts')
+          .select('*')
+          .eq('id', location.state.item.id)
+          .single();
+        if (error) {
+          setError(error.message);
+        } else {
+          setItem(data);
+        }
+        setLoading(false);
+      };
+      fetchPost();
     }
-  }, [item]);
+  }, [item, location.state]);
 
   const openOverlay = (image) => {
-    console.log("🖼 Slika za overlay: ", image); // Ispisujemo koja slika ide u overlay
-    setOverlayImage(image); // Postavljanje slike za overlay
+    setOverlayImage(image);
   };
-
   const closeOverlay = () => {
-    console.log("❌ Overlay zatvoren");
-    setOverlayImage(null); // Zatvaranje overlay-a
+    setOverlayImage(null);
   };
 
-  // Koristimo onLoad za slike da bismo pratili kad su učitane
-  const handleImageLoad = (index) => {
-    console.log(`✅ Slika ${index + 1} je učitana.`);
-  };
+  if (loading) return <div style={{ color: 'white', padding: '2rem' }}>Učitavanje...</div>;
+  if (error) return <div style={{ color: 'red', padding: '2rem' }}>Greška: {error}</div>;
+  if (!item) return <div style={{ color: 'white', padding: '2rem' }}>Projekt nije pronađen.</div>;
 
   return (
     <Container fluid className="project-details-section">
       <Particle />
       <Container>
-        <div className="image-grid">
-          {/* Glavna slika */}
-          {item?.images && item.images.length > 0 && (
+        <h1 className="project-heading">
+          <strong className="polozajTitla purple">{item.title || "No Title"}</strong>
+        </h1>
+        <p className="project-description">{item.text || "No description available."}</p>
+        <div className="image-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', marginTop: '24px' }}>
+          {item.image_urls && item.image_urls.length > 0 ? (
+            item.image_urls.map((img, idx) => (
+              <img
+                key={idx}
+                src={img || "/fallback-image.jpg"}
+                alt={item.title}
+                className="main-image"
+                onClick={() => openOverlay(img)}
+                onError={(e) => (e.target.src = "/fallback-image.jpg")}
+                style={{ cursor: "pointer", maxWidth: "320px", maxHeight: "220px", borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}
+              />
+            ))
+          ) : (
             <img
-              ref={mainImageRef}  // Povezivanje sa ref
-              src={item.images[0]}
-              alt="Main Project"
+              src={item.image_url || "/fallback-image.jpg"}
+              alt={item.title}
               className="main-image"
-              onClick={() => {
-                console.log("🖼 Kliknuto na glavnu sliku!");
-                openOverlay(item.images[0]); // Direktno onClick poziv
-              }}
+              onClick={() => openOverlay(item.image_url)}
               onError={(e) => (e.target.src = "/fallback-image.jpg")}
-              onLoad={() => handleImageLoad(0)} // Praćenje kada je slika učitana
+              style={{ cursor: "pointer", maxWidth: "320px", maxHeight: "220px", borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}
             />
           )}
-
-          {/* Sporedne slike */}
-          <div className="side-images">
-            {item?.images?.slice(1).map((img, index) => (
-              img && (
-                <img
-                  key={index}
-                  ref={(el) => sideImageRefs.current[index] = el}  // Povezivanje sa ref
-                  src={img}
-                  alt={`Project ${index + 1}`}
-                  className="side-image"
-                  onClick={() => {
-                    console.log(`🖼 Kliknuto na sliku ${index + 1}!`);
-                    openOverlay(img); // Direktni onClick poziv
-                  }}
-                  onError={(e) => (e.target.src = "/fallback-image.jpg")}
-                  onLoad={() => handleImageLoad(index + 1)} // Praćenje kada je slika učitana
-                />
-              )
-            ))}
-          </div>
-
-          <h1 className="project-heading">
-            <strong className="polozajTitla purple">{item.title || "No Title"}</strong>
-          </h1>
-          <p className="project-description">{item.text || "No description available."}</p>
         </div>
       </Container>
 
-      {/* Overlay za prikaz slike */}
+      {/* Overlay for enlarged image */}
       {overlayImage && (
         <div className="overlay show" onClick={closeOverlay}>
           <div className="overlay-content" onClick={(e) => e.stopPropagation()}>
-            {/* Ovdje ćemo direktno renderovati overlay sa slikom */}
             <img src={overlayImage} alt="Enlarged" className="overlay-image" />
             <span className="close-btn" onClick={closeOverlay}>
               &times;
