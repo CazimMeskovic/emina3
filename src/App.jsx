@@ -144,7 +144,7 @@ function PrefetchProjects() {
       try {
         const { data, error, status } = await supabase
           .from(table)
-          .select("*")
+          .select("id, title, text, image_url, created_at")
           .order("created_at", { ascending: false })
           .limit(20);
 
