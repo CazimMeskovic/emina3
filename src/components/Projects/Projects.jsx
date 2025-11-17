@@ -295,7 +295,7 @@ function Projects() {
   const { projects } = useData();
   console.log("✅ Projects data from context:", projects);
 
-  const loading = !projects || projects.length === 0;
+  const loading = projects === null || projects === undefined;
   const error = null;
   const navigate = useNavigate();
 
@@ -318,6 +318,8 @@ function Projects() {
           <Preloader load={loading} />
         ) : error ? (
           <p style={{ color: "red" }}>Greška pri učitavanju podataka: {error}</p>
+        ) : projects.length === 0 ? (
+          <p style={{ color: "white" }}>Trenutno nema dostupnih projekata.</p>
         ) : (
           <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
             {projects.map((item, index) => (

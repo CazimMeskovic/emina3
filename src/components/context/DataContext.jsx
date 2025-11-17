@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext } from "react";
 
 const DataContext = createContext({
   projects: null,
-  setProjects: () => {},
+  setProjects: () => { },
 });
 
 export const DataProvider = ({ children }) => {

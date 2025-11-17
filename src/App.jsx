@@ -131,27 +131,58 @@ function App() {
 
 export default App;
 
-// Prefetch komponenta za Projects
+// (Prefetch handled by the robust implementation below)
+
+// Robust prefetch: try 'projects' table first, then fallback to 'posts'.
 function PrefetchProjects() {
   const { setProjects } = useData();
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const { data: posts, error } = await supabase
-          .from("posts")
-          .select("*")
-          .order("created_at", { ascending: false });
+    let mounted = true;
 
-        if (error) throw error;
-        setProjects(posts);
-      } catch (err) {
-        console.error("Error prefetching projects:", err);
+    const tryFetch = async (table) => {
+      try {
+        const { data, error, status } = await supabase
+          .from(table)
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(20);
+
+        if (error) {
+          console.warn(`Supabase returned error for table '${table}':`, error.message || error);
+          return { ok: false, error, status };
+        }
+
+        return { ok: true, data };
+      } catch (e) {
+        console.error(`Network/error fetching from '${table}':`, e);
+        return { ok: false, error: e };
       }
     };
 
+    const fetchProjects = async () => {
+      // Try the table names most likely used in this project
+      /* const tablesToTry = ["projects", "posts"]; */
+      const tablesToTry = ["posts"];
+
+      for (const table of tablesToTry) {
+        const res = await tryFetch(table);
+        if (res.ok) {
+          if (mounted) setProjects(res.data || []);
+          return;
+        }
+      }
+
+      // If all attempts fail, set an empty array so UI doesn't hang
+      if (mounted) setProjects([]);
+    };
+
     fetchProjects();
+
+    return () => {
+      mounted = false;
+    };
   }, [setProjects]);
 
-  return null; // ne renderuje ništa
+  return null;
 }
