@@ -1,4 +1,5 @@
 /* import React from "react"; */
+import { Helmet } from "react-helmet";
 import { Container, Row, Col } from "react-bootstrap";
 import Particle from "../Particle";
 /* import Github from "./Github";
@@ -9,7 +10,17 @@ import laptopImg from "../../Assets/about.png";
 
 function About() {
   return (
-    <Container fluid className="OmeniMobile about-section">
+    <>
+      <Helmet>
+        <title>O meni | Mina HM</title>
+        <meta name="description" content="O meni - krojačka web stranica mina-hm.com. Saznajte više o meni, mom radu, iskustvu i unikatnim projektima." />
+        <link rel="canonical" href="https://mina-hm.com/about" />
+        <meta property="og:title" content="O meni | Mina HM" />
+        <meta property="og:description" content="O meni - krojačka web stranica mina-hm.com. Saznajte više o meni, mom radu, iskustvu i unikatnim projektima." />
+        <meta property="og:url" content="https://mina-hm.com/about" />
+        <meta property="og:type" content="profile" />
+      </Helmet>
+      <Container fluid className="OmeniMobile about-section">
       <Particle />
       <Container>
         <Row style={{ justifyContent: "center", padding: "10px" }}>
@@ -49,6 +60,7 @@ function About() {
         <Github /> */}
       </Container>
     </Container>
+    </>
   );
 }
 

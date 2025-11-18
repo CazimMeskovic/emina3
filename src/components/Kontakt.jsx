@@ -1,4 +1,5 @@
 /* import React, { useRef, useState } from "react";
+import { Helmet } from "react-helmet";
 import emailjs from "@emailjs/browser";
 import "./Kontakt.css";
 
@@ -51,7 +52,17 @@ const Contact = () => {
   };
 
   return (
-    <div className="contact-container">
+    <>
+      <Helmet>
+        <title>Kontakt | Mina HM</title>
+        <meta name="description" content="Kontaktirajte krojačku web stranicu mina-hm.com. Pošaljite poruku, upit ili zahtjev za šivenje i krojenje." />
+        <link rel="canonical" href="https://mina-hm.com/kontakt" />
+        <meta property="og:title" content="Kontakt | Mina HM" />
+        <meta property="og:description" content="Kontaktirajte krojačku web stranicu mina-hm.com. Pošaljite poruku, upit ili zahtjev za šivenje i krojenje." />
+        <meta property="og:url" content="https://mina-hm.com/kontakt" />
+        <meta property="og:type" content="website" />
+      </Helmet>
+      <div className="contact-container">
       <h3>Pošalji poruku</h3>
       <form ref={formRef} onSubmit={handleSubmit} className="contact-form">
         <label>
