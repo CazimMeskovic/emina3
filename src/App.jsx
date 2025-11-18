@@ -18,6 +18,10 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { UploadPage, DisplayPage } from "./components/UploadPage";
 import ProjectDetails from "./components/Projects/ProjectDetails";
+
+import Blog from "./components/Blog/Blog";
+import BlogDetails from "./components/Blog/BlogDetails";
+import Blog from "./components/Blog/Blog";
 import PasswordPage from "./components/PasswordPage ";
 import Kontakt from "./components/Kontakt";
 
@@ -80,6 +84,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { UploadPage, DisplayPage } from "./components/UploadPage";
 import ProjectDetails from "./components/Projects/ProjectDetails";
 
+import Blog from "./components/Blog/Blog";
+import BlogDetails from "./components/Blog/BlogDetails";
 import PasswordPage from "./components/PasswordPage ";
 import Kontakt from "./components/Kontakt";
 
@@ -111,6 +117,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/project" element={<Projects />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:id" element={<BlogDetails />} />
             <Route path="/about" element={<About />} />
             <Route path="/resume" element={<Resume />} />
             <Route path="*" element={<Navigate to="/" />} />
@@ -144,7 +152,8 @@ function PrefetchProjects() {
       try {
         const { data, error, status } = await supabase
           .from(table)
-          .select("id, title, text, image_url, created_at")
+          .select("id, title, text, image_url, image_urls, type, created_at")
+          .eq('type', 'project')
           .order("created_at", { ascending: false })
           .limit(20);
 

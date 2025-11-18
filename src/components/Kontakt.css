@@ -1,40 +1,42 @@
 /* Wrapper centrira sadržaj i ograničava širinu */
 .kontakt-wrapper {
+  box-sizing: border-box;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: stretch;
   gap: 2rem;
-  padding: 3rem;
+  padding: 3rem 2rem;
   background: radial-gradient(circle at top left, #0b0f1a, #010409);
   color: #fff;
-  border-radius: 20px;
-  box-shadow: 0 0 40px rgba(0, 255, 255, 0.1);
+  border-radius: 0; /* full width look */
+  box-shadow: none;
   overflow: hidden;
-  max-width: 1000px;
-  margin: 2rem auto;
+  margin: 0;
   position: relative;
 }
 
 /* Opći stil za kartice */
 .kontakt-card {
   padding: 2rem;
-  border-radius: 15px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.15);
-  min-width: 300px;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  min-width: 260px;
 }
 
 /* Lijeva forma */
 .kontakt-forma {
-  background: rgba(15, 25, 45, 0.6);
+  background: linear-gradient(180deg, rgba(15,25,45,0.85), rgba(10,18,35,0.7));
+  flex: 1.2;
 }
 
 /* Desna info */
 .kontakt-info {
-  background: rgba(10, 20, 40, 0.5);
+  background: linear-gradient(180deg, rgba(8,15,30,0.6), rgba(6,12,24,0.5));
   flex: 0.8;
   position: relative;
-  min-width: 250px;
+  min-width: 220px;
 }
 
 /* Titlovi */
@@ -121,6 +123,27 @@
   filter: blur(60px);
 }
 
+/* Floating action button for quick contact (phone/WhatsApp) */
+.kontakt-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#25D366,#128C7E);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  z-index: 50;
+  cursor: pointer;
+}
+.kontakt-fab:hover { transform: translateY(-3px); }
+
+.kontakt-fab .fab-icon { font-size: 22px; }
+
 /* Responzivno */
 /* 
 @media (max-width: 900px) {
@@ -153,5 +176,10 @@
   .kontakt-card {
     width: 100%;
   }
+}
+
+@media (min-width: 1100px) {
+  .kontakt-wrapper { padding: 4rem 6rem; }
+  .kontakt-card { padding: 2.4rem; }
 }
 

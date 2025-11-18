@@ -281,7 +281,7 @@ function Projects() {
   const { projects } = useData();
   console.log("✅ Projects data from context:", projects);
 
-  const loading = projects === null || projects === undefined;
+    const loading = projects === null || projects === undefined || projects.length === 0;
   const error = null;
   const navigate = useNavigate();
 

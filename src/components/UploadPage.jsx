@@ -9,11 +9,13 @@ const UploadPage = () => {
   const [posts, setPosts] = useState([]);
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
+  const [postType, setPostType] = useState('project');
   const [images, setImages] = useState([null, null, null, null, null]);
   const [previews, setPreviews] = useState([null, null, null, null, null]);
   const [imageUrls, setImageUrls] = useState([null, null, null, null, null]);
   const [buttonText, setButtonText] = useState("Objavi");
   const [editingId, setEditingId] = useState(null);
+  const [editingTable, setEditingTable] = useState('posts');
 
   const location = useLocation();
 
@@ -29,6 +31,7 @@ const UploadPage = () => {
       if (isMounted) {
         setTitle(project.title);
         setText(project.text);
+        setPostType(project.type || 'project');
         setImages(project.images || [null, null, null, null, null]);
         setPreviews(project.images || [null, null, null, null, null]);
         setEditingId(project.id);
@@ -56,13 +59,25 @@ const UploadPage = () => {
 
   const fetchPosts = async () => {
     try {
-      const { data, error } = await supabase
+      // fetch posts and blogs separately so admin can manage both
+      const { data: postsData, error: postsErr } = await supabase
         .from('posts')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setPosts(data);
+      const { data: blogsData, error: blogsErr } = await supabase
+        .from('blogs')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (postsErr) console.warn('Error fetching posts:', postsErr);
+      if (blogsErr) console.warn('Error fetching blogs:', blogsErr);
+
+      const merged = [];
+      if (Array.isArray(postsData)) merged.push(...postsData.map(p => ({ ...p, _table: 'posts' })));
+      if (Array.isArray(blogsData)) merged.push(...blogsData.map(b => ({ ...b, _table: 'blogs' })));
+
+      setPosts(merged);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -73,15 +88,16 @@ const UploadPage = () => {
     const file = e.target.files[0];
     if (!file) return;
     const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}_${file.name}`;
+    const bucket = postType === 'blog' ? 'blog-images' : 'project-images';
     const { data, error } = await supabase.storage
-      .from("project-images")
+      .from(bucket)
       .upload(fileName, file);
     if (error || !data) {
       alert("Greška pri uploadu slike! " + (error?.message || ""));
       return;
     }
     const { data: urlData, error: urlError } = supabase.storage
-      .from("project-images")
+      .from(bucket)
       .getPublicUrl(fileName);
     if (urlError || !urlData?.publicUrl) {
       alert("Greška pri dohvaćanju URL-a slike! " + (urlError?.message || ""));
@@ -131,8 +147,11 @@ const UploadPage = () => {
         }
 
         console.log("Deleting post id:", id);
+        // Determine which table this id belongs to by checking posts state
+        const found = posts.find(p => p.id === id);
+        const tableName = found?._table || 'posts';
         const { error } = await supabase
-          .from('posts')
+          .from(tableName)
           .delete()
           .match({
             id: id,
@@ -157,6 +176,10 @@ const UploadPage = () => {
   const handleEdit = (post) => {
     setTitle(post.title || "");
     setText(post.text || "");
+    // Determine the table and set editing context
+    const table = post._table || (post.type === 'blog' ? 'blogs' : 'posts');
+    setEditingTable(table);
+    setPostType(table === 'blogs' ? 'blog' : 'project');
     // Postoji li image_url? Postavi ga kao preview i url
     setImageUrls([post.image_url || null, null, null, null, null]);
     setPreviews([post.image_url || null, null, null, null, null]);
@@ -203,15 +226,17 @@ const UploadPage = () => {
         text: text.trim(),
         image_url: filteredImageUrls[0] || null, // for backward compatibility
         image_urls: filteredImageUrls // new array column for all images
+        , type: postType
       };
 
       console.log("Preparing to save post data:", { ...postData, imageCount: filteredImageUrls.length });
 
       let result;
       if (editingId) {
-        console.log("Updating existing post:", editingId);
+        const tableName = editingTable === 'blogs' ? 'blogs' : 'posts';
+        console.log("Updating existing post:", editingId, tableName);
         const { error } = await supabase
-          .from('posts')
+          .from(tableName)
           .update({
             title: postData.title,
             text: postData.text,
@@ -225,15 +250,29 @@ const UploadPage = () => {
           });
         result = { error };
       } else {
-        console.log("Creating new post");
-        const { error } = await supabase
-          .from('posts')
-          .insert({
-            ...postData,
-            created_at: new Date().toISOString(),
-            user_id: session.user.id
-          });
-        result = { error };
+        console.log("Creating new post, postType:", postType);
+        if (postType === 'blog') {
+          // blogs table doesn't include a `type` column — remove it before inserting
+          const insertData = { ...postData };
+          delete insertData.type;
+          const { error } = await supabase
+            .from('blogs')
+            .insert({
+              ...insertData,
+              created_at: new Date().toISOString(),
+              user_id: session.user.id
+            });
+          result = { error };
+        } else {
+          const { error } = await supabase
+            .from('posts')
+            .insert({
+              ...postData,
+              created_at: new Date().toISOString(),
+              user_id: session.user.id
+            });
+          result = { error };
+        }
       }
 
       console.log('supabase result:', result);
@@ -271,6 +310,13 @@ const UploadPage = () => {
             className="input-title"
             required
           />
+          <div style={{ marginTop: '12px', marginBottom: '8px' }}>
+            <label style={{ color: '#cfd8dc', marginRight: '8px' }}>Tip objave:</label>
+            <select value={postType} onChange={(e) => setPostType(e.target.value)} style={{ padding: '6px 8px', borderRadius: '8px', background: '#111', color: '#fff', border: '1px solid #333' }}>
+              <option value="project">Projekt</option>
+              <option value="blog">Blog</option>
+            </select>
+          </div>
           <textarea
             placeholder="Unesi opis"
             value={text}
