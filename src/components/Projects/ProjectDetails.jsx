@@ -1,331 +1,4 @@
-/* 
- 
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Container } from "react-bootstrap";
-import "./ProjectDetails.css";
 
-function ProjectDetails() {
-  const location = useLocation();
-  const { item } = location.state || {};
-  const [showOverlay, setShowOverlay] = useState(false);
-  const [overlayImage, setOverlayImage] = useState("");
-
-  // Ako nema projekta, prikazujemo poruku
-  if (!item) {
-    return <p>No project details available.</p>;
-  }
-
-  // Funkcija za otvaranje overlay-a
-  const openOverlay = (image) => {
-    setOverlayImage(image);
-    setShowOverlay(true);
-  };
-
-  // Funkcija za zatvaranje overlay-a
-  const closeOverlay = () => {
-    setShowOverlay(false);
-    setOverlayImage("");
-  };
-
-  // Putanja do servera
-  const imagePath = "https://server-emina.onrender.com/uploads/";
-
-  return (
-    <Container className="project-details-section">
-   
-      
-      <div className="image-grid">
-       
-        <img
-          src={`${imagePath}${item.image}`}
-          alt="Main Project"
-          className="main-image"
-          onClick={() => openOverlay(item.image)}
-          onError={(e) => e.target.src = "/fallback-image.jpg"} // Fallback slika u slučaju greške
-        />
-        
-        <div className="side-images">
-         
-          {[item.img1, item.img2, item.img3, item.img4].map((img, index) => (
-            img && (
-              <img
-                key={index}
-                src={`${imagePath}${img}`}
-                alt={`Project ${index + 1}`}
-                className=" side-image"
-                onClick={() => openOverlay(img)}
-                onError={(e) => e.target.src = "/fallback-image.jpg"} // Fallback slika u slučaju greške
-              />
-            )
-          ))}
-        </div>
-      </div>
-
-      <h1 className="project-title">{item.title || "Untitled Project"}</h1>
-
-    
-      <p className="project-description">{item.text || "No description available."}</p>
-
-     
-      {showOverlay && (
-        <div className="overlay" onClick={closeOverlay}>
-          <div className="overlay-content" onClick={(e) => e.stopPropagation()}>
-            <span className="close-btn" onClick={closeOverlay}>×</span>
-            <img
-              src={`${imagePath}${overlayImage}`}
-              alt="Overlay"
-              className="overlay-image"
-            />
-          </div>
-        </div>
-      )}
-    </Container>
-  );
-}
-
-export default ProjectDetails;
- 
-
- */
-/* 
-
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
-import Preloader from "../Pre"; // Uvezi Preloader
-
-function ProjectDetails() {
-  const location = useLocation();
-  const { item } = location.state || {}; // Prvo dobijamo item
-
-  // Inicijalizacija hook-ova
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [data, setData] = useState([]); // Dodajemo state za podatke
-
-  // URL za GitHub RAW fajl
-  const rawGithubUrl =
-    "https://raw.githubusercontent.com/CazimMeskovic/emina3/main/data.json";
-
-  useEffect(() => {
-    // Ako `item` nije dostupan, nemoj ni pokušavati da učitavaš podatke
-    if (!item) return;
-
-    fetch(rawGithubUrl)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setData(data); // Učitavamo podatke
-        setLoading(false); // Završeno učitavanje
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setError(error.message);
-        setLoading(false);
-      });
-  }, [item]); // Učitaj podatke kada `item` postoji
-
-  // Ako `item` nije definisan, prikaži poruku
-  if (!item) {
-    return <p>No project details available.</p>;
-  }
-
-  // Putanja do GitHub RAW sadržaja
-  const imagePath = "https://raw.githubusercontent.com/CazimMeskovic/emina3/main/";
-
-  return (
-    <Container className="project-details-section">
-      {loading ? (
-        <Preloader load={loading} />
-      ) : error ? (
-        <p style={{ color: "red" }}>Greška pri učitavanju podataka: {error}</p>
-      ) : (
-        <>
-          <h1 className="project-title">{item.title || "Untitled Project"}</h1>
-          <p className="project-description">{item.text || "No description available."}</p>
-
-          <Row>
-            <Col md={12}>
-              <img
-                src={`${imagePath}${item.image}`}
-                alt="Main Project"
-                className="main-image"
-                onError={(e) => e.target.src = "/fallback-image.jpg"} // Fallback slika u slučaju greške
-              />
-            </Col>
-          </Row>
-
-          <Row>
-            {[item.img1, item.img2, item.img3, item.img4].map((img, index) =>
-              img ? (
-                <Col key={index} md={3}>
-                  <img
-                    src={`${imagePath}${img}`}
-                    alt={`Project ${index + 1}`}
-                    className="side-image"
-                    onError={(e) => e.target.src = "/fallback-image.jpg"} // Fallback slika u slučaju greške
-                  />
-                </Col>
-              ) : null
-            )}
-          </Row>
-        </>
-      )}
-    </Container>
-  );
-}
-
-export default ProjectDetails;
- */
-/* 
-import React from "react";
-import { useLocation } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
-import Particle from "../Particle";
-
-function ProjectDetails() {
-  const { state } = useLocation();
-  const { item } = state || {}; // Get the project data passed from Projects
-
-  if (!item) {
-    return <p>Projekt nije pronađen.</p>;
-  }
-
-  return (
-    <Container fluid className="project-details-section">
-      <Particle />
-      <Container>
-        <h1 className="project-heading">
-          <strong className="purple">{item.title || "No Title"}</strong>
-        </h1>
-        <p>{item.text || "No description available."}</p>
-
-        {item.images && item.images.length > 0 ? (
-          <Row>
-            {item.images.map((img, index) => (
-              <Col key={index} xs={12} md={6} lg={4}>
-                <img
-                  src={img}
-                  alt={`Project Image ${index}`}
-                  width="100%"
-                  style={{
-                    marginTop: "10px",
-                    borderRadius: "10px",
-                    maxHeight: "300px",
-                    objectFit: "cover",
-                  }}
-                />
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          <p>No images available</p>
-        )}
-      </Container>
-    </Container>
-  );
-}
-
-export default ProjectDetails;
- */
-
-/* 
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
-import Particle from "../Particle";
-import "./ProjectDetails.css"; // Stilizuj stranicu sa tvojim CSS-om
-
-function ProjectDetails() {
-  const location = useLocation();
-  const { item } = location.state || {};
-  const [showOverlay, setShowOverlay] = useState(false);
-  const [overlayImage, setOverlayImage] = useState("");
-
-  // Ako nema projekta, prikazujemo poruku
-  if (!item) {
-    return <p>No project details available.</p>;
-  }
-
-  // Funkcija za otvaranje overlay-a
-  const openOverlay = (image) => {
-    setOverlayImage(image);
-    setShowOverlay(true);
-  };
-
-  // Funkcija za zatvaranje overlay-a
-  const closeOverlay = () => {
-    setShowOverlay(false);
-    setOverlayImage("");
-  };
-
-  return (
-    <Container fluid className="project-details-section">
-      <Particle />
-      <Container>
-       
-
-        <div className="image-grid">
-          {item.images && item.images.length > 0 ? (
-            <>
-              <img
-                src={item.images[0]} // Prva slika
-                alt="Main Project"
-                className="main-image"
-                onClick={() => openOverlay(item.images[0])}
-                onError={(e) => e.target.src = "/fallback-image.jpg"} // Fallback slika u slučaju greške
-              />
-
-              <div className="side-images">
-                {item.images.slice(1).map((img, index) => (
-                  img && (
-                    <img
-                      key={index}
-                      src={img}
-                      alt={`Project ${index + 1}`}
-                      className="side-image"
-                      onClick={() => openOverlay(img)}
-                      onError={(e) => e.target.src = "/fallback-image.jpg"} // Fallback slika u slučaju greške
-                    />
-                  )
-                ))}
-              </div>
-              <h1 className="project-heading">
-          <strong className="polozajTitla purple ">{item.title || "No Title"}</strong>
-        </h1>
-        <p className="project-description">{item.text || "No description available."}</p>
-            </>
-          ) : (
-            <p>No images available</p>
-          )}
-        </div>
-
-        {showOverlay && (
-          <div className="overlay" onClick={closeOverlay}>
-            <div className="overlay-content" onClick={(e) => e.stopPropagation()}>
-              <span className="close-btn" onClick={closeOverlay}>×</span>
-              <img
-                src={overlayImage}
-                alt="Overlay"
-                className="overlay-image"
-              />
-            </div>
-          </div>
-        )}
-      </Container>
-    </Container>
-  );
-}
-
-export default ProjectDetails;
- 
-
- */
 
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
@@ -342,26 +15,39 @@ function ProjectDetails() {
   const [loading, setLoading] = useState(!initialItem);
   const [error, setError] = useState(null);
 
+  // Always fetch the full post from Supabase when we have an id.
+  // Some navigations pass a partial `item` in location.state; to ensure we have
+  // the complete `image_urls` array, fetch the record by id.
+  const postId = location.state?.item?.id || initialItem?.id;
+
   useEffect(() => {
-    // If no item in state, fetch from Supabase by id in query params
-    if (!item && location.state?.item?.id) {
-      const fetchPost = async () => {
-        setLoading(true);
+    if (!postId) return;
+
+    let mounted = true;
+    const fetchPost = async () => {
+      setLoading(true);
+      try {
         const { data, error } = await supabase
           .from('posts')
           .select('*')
-          .eq('id', location.state.item.id)
+          .eq('id', postId)
           .single();
+
         if (error) {
-          setError(error.message);
+          if (mounted) setError(error.message);
         } else {
-          setItem(data);
+          if (mounted) setItem(data);
         }
-        setLoading(false);
-      };
-      fetchPost();
-    }
-  }, [item, location.state]);
+      } catch (err) {
+        if (mounted) setError(err.message || 'Greška pri dohvaćanju posta');
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    fetchPost();
+    return () => { mounted = false; };
+  }, [postId]);
 
   const openOverlay = (image) => {
     setOverlayImage(image);
@@ -369,15 +55,96 @@ function ProjectDetails() {
   const closeOverlay = () => {
     setOverlayImage(null);
   };
+  // Build an array of image identifiers from different possible fields
+  const rawImages = (() => {
+    // item.images might already be an array
+    if (Array.isArray(item?.images) && item.images.length > 0) return item.images;
+
+    // item.image_urls may be stored as JSON string or as an array
+    if (Array.isArray(item?.image_urls) && item.image_urls.length > 0) return item.image_urls;
+    if (typeof item?.image_urls === 'string' && item.image_urls.trim()) {
+      try {
+        const parsed = JSON.parse(item.image_urls);
+        if (Array.isArray(parsed)) return parsed;
+      } catch (e) {
+        // fallback: maybe comma separated
+        return item.image_urls.split(',').map(s => s.trim()).filter(Boolean);
+      }
+    }
+
+    // single image fields
+    if (item?.image) return [item.image];
+    if (item?.image_url) return [item.image_url];
+
+    return [];
+  })();
+
+  // Debug: also log to console (use console.log so it's not filtered)
+  try {
+    console.log('ProjectDetails rawImages:', rawImages);
+  } catch (e) {
+    /* ignore in non-browser env */
+  }
+
+  // Resolve an image entry to an actual URL usable in <img src>
+  const resolveImageUrl = async (img) => {
+    if (!img) return null;
+
+    // If it's already a data URI or http(s) url, return as-is
+    if (typeof img === 'string' && (img.startsWith('data:') || img.startsWith('http://') || img.startsWith('https://'))) {
+      return img;
+    }
+
+    // If value looks like it contains the bucket prefix (e.g., "project-images/filename.jpg"), strip it
+    let path = img;
+    if (path.startsWith('project-images/')) {
+      path = path.replace(/^project-images\//, '');
+    }
+
+    // Try getting public URL from Supabase Storage
+    try {
+      const { data } = await supabase.storage.from('project-images').getPublicUrl(path);
+      if (data && data.publicUrl) return data.publicUrl;
+
+      // If publicUrl is empty (private bucket), try creating signed URL (valid for 60 seconds)
+      const { data: signed, error: signedErr } = await supabase.storage.from('project-images').createSignedUrl(path, 60);
+      if (signedErr) {
+        console.warn('Could not create signed URL for', path, signedErr);
+        return null;
+      }
+      return signed.signedUrl;
+    } catch (err) {
+      console.error('Error resolving storage image url for', img, err);
+      return null;
+    }
+  };
+
+  // Resolve all images (limit to max 5)
+  const [imagesToShow, setImagesToShow] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    const prepare = async () => {
+      const resolved = [];
+      for (const raw of rawImages.slice(0, 5)) {
+        const url = await resolveImageUrl(raw);
+        if (url) resolved.push(url);
+      }
+      if (mounted) {
+        setImagesToShow(resolved);
+        try {
+          console.log('ProjectDetails imagesToShow resolved:', resolved);
+        } catch (e) {}
+      }
+    };
+    prepare();
+    return () => { mounted = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item]);
 
   if (loading) return <div style={{ color: 'white', padding: '2rem' }}>Učitavanje...</div>;
   if (error) return <div style={{ color: 'red', padding: '2rem' }}>Greška: {error}</div>;
   if (!item) return <div style={{ color: 'white', padding: '2rem' }}>Projekt nije pronađen.</div>;
-
-  // Use image_urls if present, otherwise fallback to image_url
-  const imagesToShow = Array.isArray(item.image_urls) && item.image_urls.length > 0
-    ? item.image_urls.filter(Boolean)
-    : item.image_url ? [item.image_url] : [];
 
   return (
     <Container fluid className="project-details-section">
@@ -404,6 +171,17 @@ function ProjectDetails() {
             <p style={{ color: 'white' }}>Nema slika za ovaj projekat.</p>
           )}
         </div>
+        {/* Visible debugging: show raw and resolved images for easier troubleshooting */}
+       {/*  <div style={{ color: 'white', marginTop: '16px', fontSize: '12px' }}>
+          <details style={{ color: 'white' }}>
+            <summary style={{ cursor: 'pointer' }}>Debug: rawImages / resolved URLs (click to expand)</summary>
+            <pre style={{ color: 'white', whiteSpace: 'pre-wrap' }}>
+              RAW: {JSON.stringify(rawImages, null, 2)}
+              
+              RESOLVED: {JSON.stringify(imagesToShow, null, 2)}
+            </pre>
+          </details>
+        </div> */}
       </Container>
 
       {/* Overlay for enlarged image */}
