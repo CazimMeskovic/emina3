@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 import { Container, Row, Col } from "react-bootstrap";
 /* import homeLogo from "../../Assets/home-main.svg"; */
 import homeLogo from "../../Assets/home-main.png";
@@ -8,10 +9,20 @@ import Type from "./Type";
 
 function Home() {
   return (
-    <section>
-      <Container fluid className="home-section" id="home">
-        <Particle />
-        <Container className="homeFone home-content">
+    <>
+      <Helmet>
+        <title>Mina HM | Krojačka web stranica</title>
+        <meta name="description" content="Dobro došli na krojačku web stranicu mina-hm.com. Šivenje, krojenje, unikatni radovi, kontakt i portfolio." />
+        <link rel="canonical" href="https://mina-hm.com/" />
+        <meta property="og:title" content="Mina HM | Krojačka web stranica" />
+        <meta property="og:description" content="Dobro došli na krojačku web stranicu mina-hm.com. Šivenje, krojenje, unikatni radovi, kontakt i portfolio." />
+        <meta property="og:url" content="https://mina-hm.com/" />
+        <meta property="og:type" content="website" />
+      </Helmet>
+      <section>
+        <Container fluid className="home-section" id="home">
+          <Particle />
+          <Container className="homeFone home-content">
           <Row>
             <Col md={7} className="home-header">
               <h1 style={{ paddingBottom: 15 }} className="heading">
@@ -43,7 +54,8 @@ function Home() {
         </Container>
       </Container>
       <Home2 />
-    </section>
+      </section>
+    </>
   );
 }
 

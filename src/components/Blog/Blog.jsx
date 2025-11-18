@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './Blog.css';
@@ -36,7 +37,17 @@ export default function Blog() {
   };
 
   return (
-    <Container className="blog-page" fluid>
+    <>
+      <Helmet>
+        <title>Blog | Mina HM</title>
+        <meta name="description" content="Novosti, blog i najnovije vijesti sa sajta mina-hm.com. Šivenje, krojenje, unikatni radovi." />
+        <link rel="canonical" href="https://mina-hm.com/blog" />
+        <meta property="og:title" content="Blog | Mina HM" />
+        <meta property="og:description" content="Novosti, blog i najnovije vijesti sa sajta mina-hm.com. Šivenje, krojenje, unikatni radovi." />
+        <meta property="og:url" content="https://mina-hm.com/blog" />
+        <meta property="og:type" content="website" />
+      </Helmet>
+      <Container className="blog-page" fluid>
       <h1 className="blog-title">Novosti & Blog</h1>
       <p className="blog-sub">Najnovije vijesti i radovi</p>
 
@@ -58,6 +69,7 @@ export default function Blog() {
                   <Card.Text className="excerpt">{(p.text || '').slice(0, 140)}{(p.text || '').length>140 ? '...' : ''}</Card.Text>
                   <div className="d-flex justify-content-between align-items-center">
                     <small className="text-muted">{p.created_at ? new Date(p.created_at).toLocaleDateString() : ''}</small>
+                    {/* ...existing code... */}
                     <Button variant="primary" size="sm" onClick={() => openDetails(p)}>Čitaj više</Button>
                   </div>
                 </Card.Body>
@@ -66,6 +78,7 @@ export default function Blog() {
           ))}
         </Row>
       )}
-    </Container>
-  );
-}
+      </Container>
+      </>
+    );
+  }

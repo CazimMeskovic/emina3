@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabaseClient';
 import './Blog.css';
@@ -44,7 +45,20 @@ export default function BlogDetails() {
   if (!post) return <div style={{ padding: 20, color: '#fff' }}>Objava nije pronađena.</div>;
 
   return (
-    <div className="blog-details container">
+    <>
+      <Helmet>
+        <title>{post.title ? `${post.title} | Blog | Mina HM` : 'Blog | Mina HM'}</title>
+        <meta name="description" content={post.text ? post.text.slice(0, 150) : 'Blog objava sa sajta mina-hm.com.'} />
+        <link rel="canonical" href={`https://mina-hm.com/blog/${post.id}`} />
+        <meta property="og:title" content={post.title ? `${post.title} | Blog | Mina HM` : 'Blog | Mina HM'} />
+        <meta property="og:description" content={post.text ? post.text.slice(0, 150) : 'Blog objava sa sajta mina-hm.com.'} />
+        <meta property="og:url" content={`https://mina-hm.com/blog/${post.id}`} />
+        <meta property="og:type" content="article" />
+        {post.image_urls && post.image_urls[0] && (
+          <meta property="og:image" content={post.image_urls[0]} />
+        )}
+      </Helmet>
+      <div className="blog-details container">
      {/*  <button className="btn btn-light mb-3 back-btn" onClick={() => navigate(-1)}>Nazad</button> */}
 
       <article className="blog-article">
@@ -78,5 +92,7 @@ export default function BlogDetails() {
         </div>
       </article>
     </div>
+    </>
   );
 }
+
