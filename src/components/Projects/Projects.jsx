@@ -130,47 +130,28 @@ import Preloader from "../Pre"; // Uvezi Preloader
 import { supabase } from "../../supabaseClient";
 
 function Projects() {
-  const [data, setData] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchProjects();
-  }, []);
-
-  const fetchProjects = async () => {
-    try {
-      const { data: posts, error } = await supabase
-        .from('posts')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setData(posts);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching data from Supabase:", error);
-      setError(error.message);
-      setLoading(false);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Jeste li sigurni da želite obrisati ovu objavu?')) {
+    const fetchPosts = async () => {
       try {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('posts')
-          .delete()
-          .eq('id', id);
-
+          .select('*')
+          .order('created_at', { ascending: false });
         if (error) throw error;
-        fetchProjects(); // Refresh the list after deletion
-      } catch (error) {
-        console.error("Error deleting post:", error);
+        setPosts(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-    }
-  };
+    };
+    fetchPosts();
+  }, []);
 
   const handleDemoClick = (item) => {
     navigate("/project-details", { state: { item } });
@@ -191,21 +172,22 @@ function Projects() {
           <Preloader load={loading} />
         ) : error ? (
           <p style={{ color: "red" }}>Greška pri učitavanju podataka: {error}</p>
+        ) : posts.length === 0 ? (
+          <p style={{ color: "white" }}>Trenutno nema dostupnih projekata.</p>
         ) : (
           <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
-            {data.map((item, index) => (
+            {posts.map((item, index) => (
               <Col key={index} md={4} className="project-card">
                 <ProjectCard
                   imgPath={
-                    item.images && item.images.length > 0
-                      ? item.images[0] // Prva slika u nizu
-                      : "/fallback-image.jpg"
+                    item.image_urls && item.image_urls.length > 0
+                      ? item.image_urls[0]
+                      : item.image_url || "/fallback-image.jpg"
                   }
                   isBlog={false}
                   title={item.title || "Untitled Project"}
                   description={item.text || "No description available."}
                   ghLink={item.ghLink || "#"}
-                  demoLink="#"
                   onDemoClick={() => handleDemoClick(item)}
                 />
               </Col>
@@ -235,7 +217,11 @@ function Projects() {
   const navigate = useNavigate();
 
   const handleDemoClick = (item) => {
-    navigate("/project-details", { state: { item } });
+      // Automatski preusmjeri na staru rutu ako treba
+      if (item && item.id) {
+       navigate(`/project-details?id=${item.id}`);
+       // Za novu rutu koristi: router.push(`/project/${item.id}`);
+      }
   };
 
   return (
@@ -295,7 +281,7 @@ function Projects() {
   const { projects } = useData();
   console.log("✅ Projects data from context:", projects);
 
-  const loading = !projects || projects.length === 0;
+  const loading = projects === null || projects === undefined;
   const error = null;
   const navigate = useNavigate();
 
@@ -318,13 +304,15 @@ function Projects() {
           <Preloader load={loading} />
         ) : error ? (
           <p style={{ color: "red" }}>Greška pri učitavanju podataka: {error}</p>
+        ) : projects.length === 0 ? (
+          <p style={{ color: "white" }}>Trenutno nema dostupnih projekata.</p>
         ) : (
           <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
             {projects.map((item, index) => (
               <Col key={index} md={4} className="project-card">
                 <ProjectCard
                   imgPath={
-                    item.images?.[0] || "/fallback-image.jpg"
+                    item.image_url || "/fallback-image.jpg"
                   }
                   isBlog={false}
                   title={item.title || "Untitled Project"}
