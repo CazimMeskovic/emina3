@@ -142,7 +142,7 @@ function ProjectDetails() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item]);
 
-  if (loading) return <div style={{ color: 'white', padding: '2rem' }}>Učitavanje...</div>;
+  if (loading) return <div style={{ color: 'white',marginTop:'5rem', padding: '2rem' }}>Učitavanje...</div>;
   if (error) return <div style={{ color: 'red', padding: '2rem' }}>Greška: {error}</div>;
   if (!item) return <div style={{ color: 'white', padding: '2rem' }}>Projekt nije pronađen.</div>;
 
