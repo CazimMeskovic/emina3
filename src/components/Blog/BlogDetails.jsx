@@ -45,7 +45,7 @@ export default function BlogDetails() {
 
   return (
     <div className="blog-details container">
-      <button className="btn btn-light mb-3 back-btn" onClick={() => navigate(-1)}>Nazad</button>
+     {/*  <button className="btn btn-light mb-3 back-btn" onClick={() => navigate(-1)}>Nazad</button> */}
 
       <article className="blog-article">
         <header className="blog-header">
