@@ -1,3 +1,92 @@
+/* Floating label effect */
+.kontakt-float-label {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+.kontakt-float-label input,
+.kontakt-float-label textarea {
+  width: 100%;
+  padding: 1.1rem 1rem 0.6rem 1rem;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1rem;
+  transition: border 0.3s, box-shadow 0.3s, background 0.3s;
+}
+.kontakt-float-label input:focus,
+.kontakt-float-label textarea:focus {
+  border: 2px solid #00eaff;
+  box-shadow: 0 0 10px #00eaff;
+  background: rgba(0, 234, 255, 0.08);
+}
+.kontakt-float-label label {
+  position: absolute;
+  left: 1rem;
+  top: 1.1rem;
+  color: #aaa;
+  font-size: 1rem;
+  pointer-events: none;
+  background: transparent;
+  transition: all 0.2s cubic-bezier(.4,0,.2,1);
+  padding: 0 0.2rem;
+}
+.kontakt-float-label input:focus + label,
+.kontakt-float-label textarea:focus + label,
+.kontakt-float-label input.filled + label,
+.kontakt-float-label textarea.filled + label,
+.kontakt-float-label label.floating {
+  top: -0.7rem;
+  left: 0.8rem;
+  font-size: 0.85rem;
+  color: #00eaff;
+  background: #0b0f1a;
+  padding: 0 0.3rem;
+  border-radius: 6px;
+}
+
+/* Toast notification */
+.kontakt-toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #00eaff, #007bff);
+  color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  z-index: 1000;
+  animation: kontakt-toast-in 0.3s;
+}
+@keyframes kontakt-toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Social icons */
+.kontakt-socials {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+}
+.kontakt-socials a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(0,234,255,0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.kontakt-socials a:hover {
+  background: #00eaff;
+  box-shadow: 0 0 10px #00eaff;
+}
+
 /* Wrapper centrira sadržaj i ograničava širinu */
 .kontakt-wrapper {
   box-sizing: border-box;
@@ -58,23 +147,7 @@
   font-weight: 500;
 }
 
-.kontakt-input,
-.kontakt-textarea {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
-  margin-top: 0.5rem;
-  transition: all 0.3s ease;
-}
 
-.kontakt-input:focus,
-.kontakt-textarea:focus {
-  box-shadow: 0 0 10px #00eaff;
-}
 
 /* Dugme */
 .kontakt-btn {
@@ -145,36 +218,34 @@
 .kontakt-fab .fab-icon { font-size: 22px; }
 
 /* Responzivno */
-/* 
+
 @media (max-width: 900px) {
   .kontakt-wrapper {
     flex-direction: column;
-    padding: 4rem 1.5rem; 
+    padding: 5.5rem 0.5rem;
+    margin-bottom: 5rem;
   }
-
-  .kontakt-card {
-    width: 100%;
-  }
-} */
- @media (max-width: 900px) {
-  .kontakt-wrapper {
-    flex-direction: column;
-    padding: 4rem 1.5rem;
-  }
-
-  /* Desna strana (kontakt info) ide prva */
   .kontakt-info {
     order: -1;
-    margin-bottom: 2rem; /* razmak ispod info */
+    margin-bottom: 2rem;
   }
-
-  /* Forma ide ispod */
   .kontakt-forma {
     order: 0;
   }
-
   .kontakt-card {
     width: 100%;
+    min-width: unset;
+    padding: 1.2rem;
+  }
+  .kontakt-title {
+    font-size: 1.2rem;
+  }
+  .kontakt-float-label label {
+    font-size: 0.95rem;
+  }
+  .kontakt-btn {
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
   }
 }
 
