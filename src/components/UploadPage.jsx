@@ -226,7 +226,6 @@ const UploadPage = () => {
         text: text.trim(),
         image_url: filteredImageUrls[0] || null, // for backward compatibility
         image_urls: filteredImageUrls // new array column for all images
-        , type: postType
       };
 
       console.log("Preparing to save post data:", { ...postData, imageCount: filteredImageUrls.length });
@@ -254,7 +253,6 @@ const UploadPage = () => {
         if (postType === 'blog') {
           // blogs table doesn't include a `type` column — remove it before inserting
           const insertData = { ...postData };
-          delete insertData.type;
           const { error } = await supabase
             .from('blogs')
             .insert({
@@ -264,10 +262,12 @@ const UploadPage = () => {
             });
           result = { error };
         } else {
+          // Remove 'type' from postData for posts table
+          const { type, ...postDataWithoutType } = postData;
           const { error } = await supabase
             .from('posts')
             .insert({
-              ...postData,
+              ...postDataWithoutType,
               created_at: new Date().toISOString(),
               user_id: session.user.id
             });
