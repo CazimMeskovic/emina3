@@ -139,7 +139,7 @@ function ProjectDetails() {
     };
     prepare();
     return () => { mounted = false; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [item]);
 
   if (loading) return <div style={{ color: 'white',marginTop:'5rem', padding: '2rem' }}>Učitavanje...</div>;
