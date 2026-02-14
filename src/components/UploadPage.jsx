@@ -10,7 +10,6 @@ const UploadPage = () => {
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
   const [postType, setPostType] = useState('project');
-  const [images, setImages] = useState([null, null, null, null, null]);
   const [previews, setPreviews] = useState([null, null, null, null, null]);
   const [imageUrls, setImageUrls] = useState([null, null, null, null, null]);
   const [buttonText, setButtonText] = useState("Objavi");
