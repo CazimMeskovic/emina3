@@ -1,11 +1,11 @@
-
-
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import Particle from "../Particle";
 import "./ProjectDetails.css";
 import { supabase } from '../../supabaseClient';
+
+import { Helmet } from "react-helmet";
 
 function ProjectDetails() {
   const location = useLocation();
@@ -146,56 +146,71 @@ function ProjectDetails() {
   if (error) return <div style={{ color: 'red', padding: '2rem' }}>Greška: {error}</div>;
   if (!item) return <div style={{ color: 'white', padding: '2rem' }}>Projekt nije pronađen.</div>;
 
-  return (
-    <Container fluid className="project-details-section">
-      <Particle />
-      <Container>
-        <h1 className="project-heading">
-          <strong className="polozajTitla purple">{item.title || "No Title"}</strong>
-        </h1>
-        <p className="project-description">{item.text || "No description available."}</p>
-        <div className="image-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', marginTop: '24px' }}>
-          {imagesToShow.length > 0 ? (
-            imagesToShow.map((img, idx) => (
-              <img
-                key={idx}
-                src={img || "/fallback-image.jpg"}
-                alt={item.title}
-                className="main-image"
-                onClick={() => openOverlay(img)}
-                onError={(e) => (e.target.src = "/fallback-image.jpg")}
-                style={{ cursor: "pointer", maxWidth: "320px", maxHeight: "220px", borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}
-              />
-            ))
-          ) : (
-            <p style={{ color: 'white' }}>Nema slika za ovaj projekat.</p>
-          )}
-        </div>
-        {/* Visible debugging: show raw and resolved images for easier troubleshooting */}
-       {/*  <div style={{ color: 'white', marginTop: '16px', fontSize: '12px' }}>
-          <details style={{ color: 'white' }}>
-            <summary style={{ cursor: 'pointer' }}>Debug: rawImages / resolved URLs (click to expand)</summary>
-            <pre style={{ color: 'white', whiteSpace: 'pre-wrap' }}>
-              RAW: {JSON.stringify(rawImages, null, 2)}
-              
-              RESOLVED: {JSON.stringify(imagesToShow, null, 2)}
-            </pre>
-          </details>
-        </div> */}
-      </Container>
+  // SEO meta values
+  const title = item?.title ? `${item.title} | Projekat | Mina HM` : 'Projekat | Mina HM';
+  const description = item?.text ? item.text.slice(0, 150) : 'Detalji inovativnog krojačkog projekta na mina-hm.com.';
+  const canonical = item?.id ? `https://mina-hm.com/project-details?id=${item.id}` : 'https://mina-hm.com/project-details';
+  const ogImage = (Array.isArray(item?.image_urls) && item.image_urls[0]) || item?.image_url || undefined;
 
-      {/* Overlay for enlarged image */}
-      {overlayImage && (
-        <div className="overlay show" onClick={closeOverlay}>
-          <div className="overlay-content" onClick={(e) => e.stopPropagation()}>
-            <img src={overlayImage} alt="Enlarged" className="overlay-image" />
-            <span className="close-btn" onClick={closeOverlay}>
-              &times;
-            </span>
+  return (
+    <>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:type" content="article" />
+        {ogImage && <meta property="og:image" content={ogImage} />}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        {ogImage && <meta name="twitter:image" content={ogImage} />}
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+        <meta name="author" content="Emina H-M" />
+        <meta name="keywords" content="krojač, krojačka radnja, šivenje, inovativni krojač, unikatni radovi, projekti, Mina HM, modni dizajn, ručni rad, kreativnost, odjeća po mjeri" />
+        <meta name="language" content="bs" />
+      </Helmet>
+      <Container fluid className="project-details-section">
+        <Particle />
+        <Container>
+          <h1 className="project-heading">
+            <strong className="polozajTitla purple">{item.title || "No Title"}</strong>
+          </h1>
+          <p className="project-description">{item.text || "No description available."}</p>
+          <div className="image-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', marginTop: '24px' }}>
+            {imagesToShow.length > 0 ? (
+              imagesToShow.map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img || "/fallback-image.jpg"}
+                  alt={item.title}
+                  className="main-image"
+                  onClick={() => openOverlay(img)}
+                  onError={(e) => (e.target.src = "/fallback-image.jpg")}
+                  style={{ cursor: "pointer", maxWidth: "320px", maxHeight: "220px", borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}
+                />
+              ))
+            ) : (
+              <p style={{ color: 'white' }}>Nema slika za ovaj projekat.</p>
+            )}
           </div>
-        </div>
-      )}
-    </Container>
+        </Container>
+
+        {/* Overlay for enlarged image */}
+        {overlayImage && (
+          <div className="overlay show" onClick={closeOverlay}>
+            <div className="overlay-content" onClick={(e) => e.stopPropagation()}>
+              <img src={overlayImage} alt="Enlarged" className="overlay-image" />
+              <span className="close-btn" onClick={closeOverlay}>
+                &times;
+              </span>
+            </div>
+          </div>
+        )}
+      </Container>
+    </>
   );
 }
 
