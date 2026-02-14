@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import "./Kontakt.css";
 
+import { Helmet } from "react-helmet";
+
 const icons = {
   email: (
     <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
@@ -84,7 +86,20 @@ const Contact = () => {
   };
 
   return (
-    <div className="kontakt-wrapper">
+    <>
+      <Helmet>
+        <title>Kontakt | Mina HM</title>
+        <meta name="description" content="Kontaktirajte inovativnu krojačku radnju Mina HM. Pošaljite upit, saznajte više o uslugama, lokaciji i načinu rada." />
+        <link rel="canonical" href="https://mina-hm.com/kontakt" />
+        <meta property="og:title" content="Kontakt | Mina HM" />
+        <meta property="og:description" content="Kontaktirajte inovativnu krojačku radnju Mina HM. Pošaljite upit, saznajte više o uslugama, lokaciji i načinu rada." />
+        <meta property="og:url" content="https://mina-hm.com/kontakt" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Kontakt | Mina HM" />
+        <meta name="twitter:description" content="Kontaktirajte inovativnu krojačku radnju Mina HM. Pošaljite upit, saznajte više o uslugama, lokaciji i načinu rada." />
+      </Helmet>
+      <div className="kontakt-wrapper">
       <Toast message={toast} onClose={() => setToast("")} />
       
       {/* Lijeva strana – Forma */}
@@ -152,7 +167,8 @@ const Contact = () => {
           <path d="M17.25 14.07c-.25-.13-1.48-.73-1.71-.81-.23-.08-.4-.13-.57.13-.17.25-.67.81-.82.98-.15.17-.3.2-.56.07-.25-.13-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.28.37-.42.12-.14.16-.24.25-.4.09-.17.04-.32-.02-.45-.07-.12-.57-1.37-.78-1.87-.2-.48-.41-.42-.57-.43-.15-.01-.32-.01-.49-.01-.17 0-.45.06-.69.32-.24.26-.92.9-.92 2.2 0 1.3.94 2.55 1.07 2.73.13.17 1.84 2.91 4.45 3.96 2.61 1.05 2.61.7 3.08.66.47-.04 1.53-.62 1.75-1.22.22-.6.22-1.12.15-1.22-.07-.11-.25-.17-.52-.3z" />
         </svg>
       </a>
-    </div>
+      </div>
+    </>
   );
 };
 
