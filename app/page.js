@@ -29,7 +29,7 @@ export default function Home() {
               className="w-full md:w-3/5 text-center md:text-left"
             >
               <h4 className="text-sm uppercase tracking-[0.3em] text-gray-500 mb-4">
-                Umetnost igle i konca
+                Umjetnost igle i konca
               </h4>
               
               <h1 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight mb-6">

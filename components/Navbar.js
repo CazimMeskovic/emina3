@@ -28,6 +28,7 @@ export default function NavBar() {
     { name: "O meni", path: "/about" },
     { name: "Kreacije", path: "/kreacije" }, // 👈 Promijenjeno u tvoju novu rutu
     { name: "Blog", path: "/blog" },
+    { name: "Vodič za Mjerenje", path: "/vodic-za-mjerenje" },
     { name: "Kontakt", path: "/kontakt" },
     { name: "Objavi", path: "/objavi", special: true },
   ];
