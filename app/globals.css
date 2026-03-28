@@ -1,0 +1,12 @@
+
+@import "tailwindcss";
+
+@theme {
+  /* 🧵 Povezujemo Playfair font za luksuzne naslove */
+  --font-serif: var(--font-serif), serif;
+  
+  /* 🧵 Povezujemo Inter font za normalan tekst */
+  --font-sans: var(--font-sans), sans-serif;
+}
+
+/* Ovdje ispod možeš pisati svoje lične CSS stilove ako ti zatrebaju */
