@@ -10,8 +10,10 @@ jobs:
   ping_supabase:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase Rest API
+      - name: Ping Supabase Blogs Table
         run: |
-          curl -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/" \
+          curl -i -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/blogs?select=id" \
           -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Range: 0-0"
+          
