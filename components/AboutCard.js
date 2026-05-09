@@ -30,6 +30,12 @@ export default function AboutCard() {
           da ostvarimo i vaše vizije. Radujem se našoj saradnji!
         </p>
       </div>
+         <p className="mb-6">
+      Kompletnu izradu i tehničku realizaciju web stranice radila je agencija
+      <a href="https://www.webizrada.ba" className="text-blue-500 hover:underline"> Webizrada.ba </a>
+      koja se bavi izradom profesionalnih web stranica i digitalnih rješenja.
+      </p>
+
 
     </div>
   );
