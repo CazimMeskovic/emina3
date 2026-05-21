@@ -2,18 +2,16 @@ name: Supabase Keep Alive
 
 on:
   schedule:
-    # Pokreće se svaka 3 dana (u 00:00)
-    - cron: '0 0 */3 * *'
-  workflow_dispatch: # Omogućava ti da pokreneš ručno ako želiš testirati
+    # Izvršava se svaka 3 dana u 07:00 ujutro
+    - cron: '0 7 */3 * *'
+  workflow_dispatch: # Omogućava ti da pokreneš ručno kad god želiš
 
 jobs:
   ping_supabase:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase Blogs Table
+      - name: Pozovi Supabase RPC Funkciju
         run: |
-          curl -i -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/blogs?select=id" \
+          curl -X POST "${{ secrets.SUPABASE_URL }}/rest/v1/rpc/insert_random_log" \
           -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
-          -H "Range: 0-0"
-          
+          -H "Content-Type: application/json"
